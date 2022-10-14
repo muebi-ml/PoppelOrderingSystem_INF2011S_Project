@@ -11,37 +11,58 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
     {
         
         #region Attributes 
-        private string customerID, address;
+        private int addressID, accountID;
+        private int customerID;
 
         #endregion
 
         #region Constructors
-        public Customer(string personID, string firstName, string lastName, string phone, string email, string customerID, string address) : base(personID, firstName, lastName, phone, email)
+        public Customer(string personID, string firstName, string lastName, string phone, string email, int customerID, int addressID) : base(personID, firstName, lastName, phone, email)
         {
             this.customerID = customerID;
-            this.address = address;
+            this.addressID = addressID;
             
         }
 
-        public Customer ( string customerID, string personID, string firstName, string lastName): base( personID, firstName, lastName )
+        public Customer ( int customerID, string personID, string firstName, string lastName): base( personID, firstName, lastName )
         {
             this.customerID = customerID;
-            address = "";
+            addressID = 0;
             
+        }
+
+        public Customer() : base()
+        {
+            customerID = 0;
+            addressID = 0;
         }
         #endregion
 
         #region Property Methods
-        public string CustomerID
+        public int CustomerID
         {
             get { return customerID; }
-            
+            set { customerID = value; }
         } 
 
-        public string Address
+        public int AddressID
         {
-            get { return address; }
-            set { address = value; }
+            get { return addressID; }
+            set { addressID = value; }
+        }
+
+        public int AccountID { 
+            get { return accountID; }
+            set { accountID = value; }  
+        }
+        #endregion
+
+        #region ToString
+        public override string ToString()
+        {
+            return 
+                base.ToString() + "\nCustomerID: " + customerID + 
+                "\nAccountID: " + accountID;
         }
         #endregion
     }
