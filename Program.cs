@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PoppelOrderingSystem_INF2011S_Project.Database_Layer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,12 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
+
+            /**
+            CustomerDB db = new CustomerDB();
+            Console.WriteLine("This is a test run");
+            Console.WriteLine(db.getCustomer(1));
+            */
         }
     }
 }

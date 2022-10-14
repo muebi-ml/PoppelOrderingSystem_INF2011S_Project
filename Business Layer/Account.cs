@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
 {
-    public class Account: Customer
+    public class Account
     {
         #region Credit Status enum
         public enum CreditStatus
@@ -19,7 +19,8 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #endregion
 
         #region Attributes 
-        private string accountID, accountName;
+        private int accountID;
+        private string accountName;
         private Collection<Order> orders;
         private Collection<Payment> payments;
         private CreditStatus creditStatus;
@@ -27,7 +28,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #endregion
 
         #region Constructor
-        public Account ( string accountID, string accountName, string customerID, string personID, string firstName, string lastName ) : base(customerID, personID, firstName, lastName)
+        public Account ( int accountID, string accountName) 
         {
             this.accountID = accountID;
             this.accountName = accountName;
@@ -38,12 +39,23 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             this.creditLimit = 0;
             
         }
+
+        public Account()
+        {
+            this.AccountID = 0;
+            this.accountName = "";
+            this.creditStatus = CreditStatus.UNASSIGNED;
+            this.creditBalance = 0;
+            this.creditLimit = 0;
+
+        }
         #endregion
 
         #region Property Methods
-        public string AccountID
+        public int AccountID
         {
             get { return this.accountID; }
+            set { this.accountID = value; }
         }
 
         public string AccountName
