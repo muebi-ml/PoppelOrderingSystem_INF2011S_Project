@@ -20,20 +20,21 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         }
         #endregion
         #region Attributes
-        private string productID;
+        private string productCode;
         private string productName;
         private string productDescription;
         private Category productType;
         private int inStockLevel, reservedLevel;
         private bool onSpecial;
         private double price;
+        private DateTime expiryDate;
         private double discountPrice;
         #endregion
 
         #region Constructor 
-        public Product ( string productID, string productName, string productDescription, Category productType, double price)
+        public Product ( string productCode, string productName, string productDescription, Category productType, double price)
         {
-            this.productID = productID;
+            this.productCode = productCode;
             this.productName = productName;
             this.productDescription = productDescription;
             this.price = price;
@@ -47,9 +48,10 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #endregion
 
         #region Property Methods 
-        public string ProductID
+        public string ProductCode
         {
-            get { return productID; }
+            set { productCode = value; }
+            get { return productCode; }
         }
 
         public int InStockLevel
@@ -107,6 +109,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         {
             get { return this.productName; }
             set { this.productName = value; }
+        }
+
+        public DateTime ExpiryDate
+        {
+            set { this.expiryDate = value; }
+            get { return this.expiryDate; }
         }
         #endregion
     }
