@@ -33,6 +33,15 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             email = "";
         }
 
+        public Person()
+        {
+            this.personID = "";
+            this.firstName = "";
+            this.lastName = "";
+            this.phone = "";
+            this.email = "";
+        }
+
         #endregion
 
         #region Property Methods 
@@ -61,6 +70,13 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         {
             get { return email; }
             set { email = value; }
+        }
+        #endregion
+
+        #region ToString
+        public override string ToString()
+        {
+            return "First Name: " + this.firstName + "\nLast Name: " + this.lastName + "\nPhone: " + phone + "\nEmail: " + this.email + "\n";
         }
         #endregion
     }
