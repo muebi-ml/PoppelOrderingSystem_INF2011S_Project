@@ -76,7 +76,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #region ToString
         public override string ToString()
         {
-            return "First Name: " + this.firstName + "\nLast Name: " + this.lastName + "\nPhone: " + phone + "\nEmail: " + this.email + "\n";
+            return "First Name: " + this.firstName + "\nLast Name: " + this.lastName + "\nPhone: " + phone + "\nEmail: " + this.email;
         }
         #endregion
     }

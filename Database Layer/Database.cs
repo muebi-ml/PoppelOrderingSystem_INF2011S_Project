@@ -108,6 +108,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.DatabaseLayer
             }
             catch (Exception errObj)
             {
+                cnMain.Close(); 
                 MessageBox.Show(errObj.Message + "  " + errObj.StackTrace);//https://docs.microsoft.com/en-us/dotnet/api/system.exception.stacktrace?view=net-5.0
             }
         }
@@ -149,9 +150,11 @@ namespace PoppelOrderingSystem_INF2011S_Project.DatabaseLayer
             {
                 MessageBox.Show(errObj.Message + "  " + errObj.StackTrace);
                 success = false;
+                cnMain.Close();
             }
             finally
             {
+                cnMain.Close();
             }
             return success;
         }
