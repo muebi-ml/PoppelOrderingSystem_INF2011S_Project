@@ -11,7 +11,7 @@ using PoppelOrderingSystem_INF2011S_Project.Properties;
 
 namespace PoppelOrderingSystem_INF2011S_Project.DatabaseLayer
 {
-    public class DB
+    public class Database
     {
         #region Variable declaration
         #region Define a variable strConn of type string to store the string connection 
@@ -74,7 +74,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.DatabaseLayer
 
         #region Constructor
 
-        public DB()
+        public Database()
         {
             try
             {
