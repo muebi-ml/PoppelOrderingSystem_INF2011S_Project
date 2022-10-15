@@ -73,6 +73,7 @@
     <Compile Include="Business Layer\PickingList.cs" />
     <Compile Include="Business Layer\Product.cs" />
     <Compile Include="Database Layer\Database.cs" />
+    <Compile Include="Database Layer\CustomerDB.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
