@@ -13,6 +13,15 @@ namespace PoppelOrderingSystem_INF2011S_Project.DatabaseLayer
 {
     public class Database
     {
+
+        #region DatabaseOperation Enum
+        public enum DatabaseOperation
+        {
+            CREATE = 0,
+            UPDATE = 1,
+            DELETE = 2,
+        }
+        #endregion
         #region Variable declaration
         #region Define a variable strConn of type string to store the string connection 
         //***Once the database is created you can find the correct connection string by using the Settings.Default object to select the correct connection string
