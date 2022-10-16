@@ -2,6 +2,7 @@
 using PoppelOrderingSystem_INF2011S_Project.Database_Layer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,6 +21,13 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
 
+<<<<<<< HEAD
+=======
+
+            /*CustomerDB db = new CustomerDB();
+            
+            
+>>>>>>> karabo-code
 
             CustomerDB customerDB = new CustomerDB();
 
@@ -29,6 +37,32 @@ namespace PoppelOrderingSystem_INF2011S_Project
 
             Console.WriteLine(customerDB.getAccountWithID(customer));
 
+<<<<<<< HEAD
+=======
+            Console.WriteLine("test if update works");
+            Customer customer2 = new Customer("990404", "Mukhethwa", "Muebi", "0608055010", "muebiml1999@gmail.com", 5, 4);
+            customer2.AccountID = 3;
+            db.updateCustomerDetails(customer2);
+            Console.WriteLine(db.getCustomer(2)); */
+
+
+            // Test run to display all products
+            OrderDB order = new OrderDB();
+
+            /*Console.WriteLine("Show all products");
+            Console.WriteLine();
+            order.DisplayProducts();*/
+
+            // Test run to add Order
+            
+            Order ord = new Order(10200,"2022/03/12","2022/04/12","2022/04/12",Order.Status.In_Process,3);
+
+            order.addOrder(ord);
+
+            Console.WriteLine(order.getOrderByOrderNumber(10200));
+
+            
+>>>>>>> karabo-code
         }
     }
 }

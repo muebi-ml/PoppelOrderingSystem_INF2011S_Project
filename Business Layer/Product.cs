@@ -45,6 +45,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             this.reservedLevel = 0;
 
         }
+
+        public Product()
+        {
+            productCode = "";
+            productType = Category.UNSPECIFIED;
+        }
         #endregion
 
         #region Property Methods 
@@ -115,6 +121,13 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         {
             set { this.expiryDate = value; }
             get { return this.expiryDate; }
+        }
+        #endregion
+
+        #region To String
+        public override string ToString()
+        {
+            return "Product Code: " + this.productCode + "\nProduct Name: "+ this.productName +"\nPrice: " + this.price + "\nExpiry Date: " + expiryDate + "\nIn Stock: " + this.inStockLevel + "\nCategory Type: " + this.productType;
         }
         #endregion
     }

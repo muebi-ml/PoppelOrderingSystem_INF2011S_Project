@@ -99,7 +99,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.DatabaseLayer
         }
         #endregion
 
-          #region Fills dataset fresh from the db for a specific table and with a specific Query        
+        #region Fills dataset fresh from the db for a specific table and with a specific Query        
         public void FillDataSet(string aSQLstring, string aTable)
         {// The method receives two parameters: the SQL statement aSQLstring and the Table from which the query will emanate from.Within this method:
 
