@@ -16,21 +16,24 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
     public class OrderDB : Database
     {
         #region Data members
-        private string productTbl1 = "Product";
-        private string sqlLocal1 = "SELECT * FROM Product";
 
-        private string productTbl2 = "Order";
-        private string sqlLocal2 = "SELECT * FROM Order";
+        private string orderTbl = "Order";
+        private string orderQuery = "SELECT * FROM Order";
+
+        private string productTbl = "Product";
+        private string productQuery = "SELECT * FROM Product";
 
         /* Collection to add products */
+        private Collection<Order> orders;
         private Collection<Product> products;
         #endregion
 
         #region Constructor
         public OrderDB() : base()
         {
+            orders = new Collection<Order>();
             products = new Collection<Product>();
-            Add2Collection(sqlLocal1);
+            Add2Collection(productTbl);
         }
         #endregion
 
@@ -60,7 +63,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
                     product.InStockLevel = Convert.ToInt16(myRow["inStock"]);
                     //product.ProductType = Convert.ToInt16(myRow["categoryID"]);
 
-                    //Depending on Role read more Values
+                    
 
                     products.Add(product);
                 }
