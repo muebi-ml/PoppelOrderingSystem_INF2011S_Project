@@ -20,7 +20,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         }
         #endregion
         #region Attributes
-        private string productCode;
+        private int productCode;
         private string productName;
         private string productDescription;
         private Category productType;
@@ -32,7 +32,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #endregion
 
         #region Constructor 
-        public Product ( string productCode, string productName, string productDescription, Category productType, double price)
+        public Product ( int productCode, string productName, string productDescription, Category productType, double price)
         {
             this.productCode = productCode;
             this.productName = productName;
@@ -48,13 +48,13 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
 
         public Product()
         {
-            productCode = "";
+            productCode = 0;
             productType = Category.UNSPECIFIED;
         }
         #endregion
 
         #region Property Methods 
-        public string ProductCode
+        public int ProductCode
         {
             set { productCode = value; }
             get { return productCode; }
@@ -127,7 +127,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #region To String
         public override string ToString()
         {
-            return "Product Code: " + this.productCode + "\nProduct Name: "+ this.productName +"\nPrice: " + this.price + "\nExpiry Date: " + expiryDate + "\nIn Stock: " + this.inStockLevel + "\nCategory Type: " + this.productType;
+            return  "Product Code: " + this.productCode + 
+                    "\nProduct Name: "+ this.productName +
+                    "\nPrice: " + this.price + 
+                    "\nExpiry Date: " + expiryDate + 
+                    "\nIn Stock: " + this.inStockLevel + 
+                    "\nCategory Type: " + this.productType;
         }
         #endregion
     }
