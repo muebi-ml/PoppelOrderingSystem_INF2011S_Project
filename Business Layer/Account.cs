@@ -24,7 +24,8 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         private Collection<Order> orders;
         private Collection<Payment> payments;
         private CreditStatus creditStatus;
-        private double creditBalance, creditLimit;
+        private double creditBalance;
+        private double creditLimit;
         #endregion
 
         #region Constructor
@@ -48,6 +49,14 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             this.creditBalance = 0;
             this.creditLimit = 0;
 
+        }
+
+        public Account( string accountName, CreditStatus creditStatus, double creditBalance, double creditLimit )
+        {
+            this.accountName = accountName;
+            this.creditBalance= creditBalance;
+            this.creditLimit= creditLimit;
+            this.creditStatus= creditStatus;
         }
         #endregion
 
@@ -78,7 +87,16 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         public double CreditLimit
         {
             get { return this.creditLimit; }
-            set {  this.CreditLimit = value; }
+            set { this.creditLimit = value; }
+        }
+        #endregion
+
+        #region ToString
+        public override string ToString()
+        {
+            return "Account ID: " + this.AccountID + "\nAccount Name: " + this.accountName +
+                    "\nCredit status: " + this.creditStatus.ToString() + "\nCredit Balance: " + this.creditBalance +
+                    "\nCredit Limit: " + this.creditLimit;
         }
         #endregion
     }

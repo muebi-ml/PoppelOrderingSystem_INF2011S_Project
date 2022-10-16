@@ -33,6 +33,14 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             email = "";
         }
 
+        public Person( string firstName, string lastName, string phone, string email)
+        {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.phone = phone;
+            this.email = email;
+        }
+
         public Person()
         {
             this.personID = "";

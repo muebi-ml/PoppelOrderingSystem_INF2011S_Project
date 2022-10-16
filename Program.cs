@@ -21,21 +21,24 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
 
+<<<<<<< HEAD
+=======
 
             /*CustomerDB db = new CustomerDB();
             
             
+>>>>>>> karabo-code
 
-            Customer customer = new Customer("990404", "Mukhethwa", "Muebi", "0608055010", "mbxmuk002@myuct.ac.za", 5, 4);
-            customer.AccountID = 3;
+            CustomerDB customerDB = new CustomerDB();
 
-            db.addCustomer(customer);
+            Customer customer = customerDB.getCustomer(4785300);
 
-            Console.WriteLine("Added Employee");
+            Console.WriteLine(customer);
 
-            Console.WriteLine("This is a test run");
-            Console.WriteLine(db.getCustomer(5));
+            Console.WriteLine(customerDB.getAccountWithID(customer));
 
+<<<<<<< HEAD
+=======
             Console.WriteLine("test if update works");
             Customer customer2 = new Customer("990404", "Mukhethwa", "Muebi", "0608055010", "muebiml1999@gmail.com", 5, 4);
             customer2.AccountID = 3;
@@ -59,6 +62,7 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Console.WriteLine(order.getOrderByOrderNumber(10200));
 
             
+>>>>>>> karabo-code
         }
     }
 }

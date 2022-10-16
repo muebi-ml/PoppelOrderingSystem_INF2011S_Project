@@ -6,20 +6,22 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Sockets;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using PoppelOrderingSystem_INF2011S_Project.Business_Layer;
 using PoppelOrderingSystem_INF2011S_Project.DatabaseLayer;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
 {
     public class CustomerDB : Database
     {
-        #region Data Members 
 
-        #region Query Strings And Tables
+        #region Attribute: Query Strings And Tables
         private static string customerTable = "Customer";
         private static string accountTable = "Account";
         private string customersQueryString = "SELECT * FROM " + customerTable;
@@ -29,8 +31,6 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
         #region Collections
         private Collection<Customer> customers;
         private Collection<Account> accounts;
-        #endregion
-
         #endregion
 
         #region Constructor
@@ -43,62 +43,68 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
         }
         #endregion
 
-
-        #region Fill Data methods
-        private void FillCustomers( SqlDataReader reader )
+        #region Collection Methods 
+        private void FillCustomers()
         {
-            // Fill the customers collection
             Customer customer;
-
-            while ( reader.Read() )
+            customers.Clear();
+            string query = "SELECT * FROM Customer";
+            SqlCommand command = new SqlCommand(query, cnMain);
+            cnMain.Open();
+            try
             {
+                SqlDataReader reader = command.ExecuteReader();
 
-                customer = new Customer();
+                while (reader.Read())
+                {
 
-                customer.CustomerID = reader.GetInt16(0);
-                customer.FirstName = reader.GetString(1).Trim();
-                customer.LastName = reader.GetString(2).Trim();
-                customer.Phone = reader.GetString(3).Trim();
-                customer.Email = reader.GetString(4).Trim();
-                customer.AddressID = reader.GetInt16(5);
-                customer.AccountID = reader.GetInt16(6);
+                    customer = new Customer();
 
-                // Add customer to collection
-                customers.Add(customer);
+                    customer.CustomerID = reader.GetInt32(0);
+                    customer.FirstName = reader.GetString(1).Trim();
+                    customer.LastName = reader.GetString(2).Trim();
+                    customer.Phone = reader.GetString(3).Trim();
+                    customer.Email = reader.GetString(4).Trim();
+                    customer.AccountID = reader.GetInt32(5);
+                    customer.AddressID = reader.GetInt16(6);
+
+                    // Add customer to collection
+                    customers.Add(customer);
+                }
+            }
+            catch ( Exception ex)
+            {
+                Console.WriteLine( ex.Message );
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+
+        }
+
+        public Collection<Customer> getAllCustomers()
+        {
+            FillCustomers();
+            return customers;
+        }
+        #endregion
+
+        #region CRUD Operations Customer
+
+        public void UpdateCustomerDatabase ( Customer customer, DatabaseOperation operation )
+        {
+            switch ( operation )
+            {
+                case (DatabaseOperation.UPDATE):
+                    editCustomer( customer );
+                    break;
+                case (DatabaseOperation.DELETE):
+                    deleteCustomer( customer );
+                    break;
             }
         }
-
-        private void FillRow( DataRow row , Customer customer )
-        {
-            
-            row["customerID"] = customer.CustomerID;
-            row["firstName"] = customer.FirstName;
-            row["lastName"] = customer.LastName;
-            row["phone"] = customer.Phone;
-            row["email"] = customer.Email;
-            row["accountID"] = customer.AccountID;
-            row["addressID"] = customer.AddressID;
-        }
-
-        public void DataSetChange( Customer customer )
-        {
-            string table = customerTable;
-            DataRow row = dsMain.Tables[customerTable].NewRow();
-            FillRow( row, customer );
-            dsMain.Tables[customerTable].Rows.Add( row );
-        }
-
-        public bool UpdateDataSource( Customer customer )
-        {
-            bool success = true;
-
-            Create_Insert_Command(customer);
-
-            success = UpdateDataSource(customersQueryString, customerTable);
-            return success;
-        }
-
-        private Account getCustomeWithAccountID( int id )
+        private Account getAccountForCustomerID( int id )
         {
             Account account = new Account();
             SqlDataReader reader;
@@ -129,11 +135,11 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             }
 
         }
-        #region CRUD Operations Customer
-        public void addCustomer( Customer customer )
+        
+        public void addCustomer( Customer customer, Account account, Address address )
         {
-            string insert = "INSERT INTO Customer ( customerID, firstName, lastName, phone, email, addressID, accountID ) VALUES " +
-                            "( @customerID, @firstName, @lastName, @phone, @email, @addressID, @accountID )";
+            string insert = "INSERT INTO Customer ( firstName, lastName, phone, email, addressID, accountID ) VALUES " +
+                            "( @firstName, @lastName, @phone, @email, @addressID, @accountID )";
 
             SqlCommand command = new SqlCommand( insert, cnMain );
 
@@ -141,19 +147,22 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             command.CommandText = insert;
             command.Connection = cnMain;
 
-            command.Parameters.AddWithValue("@customerID", customer.CustomerID);
+            account.AccountID = createAccount(account.AccountName, (int)account.Status, account.CreditBalance, account.CreditLimit);
+            address.AddressID = createAddress(address.StreetName, address.Town, address.City, address.PostalCode);
+
             command.Parameters.AddWithValue("@firstName", customer.FirstName);
             command.Parameters.AddWithValue("@lastName", customer.LastName);
             command.Parameters.AddWithValue("phone", customer.Phone);
             command.Parameters.AddWithValue("@email", customer.Email);
-            command.Parameters.AddWithValue("@addressID", customer.AddressID);
-            command.Parameters.AddWithValue("@accountID", customer.AccountID);
+            command.Parameters.AddWithValue("@addressID", address.AddressID);
+            command.Parameters.AddWithValue("@accountID", account.AccountID);
 
             try
             {
                 cnMain.Open();
                 command.ExecuteNonQuery();
                 Console.WriteLine("Customer Added Successfully");
+                customers.Add(customer);
             }
             catch (SqlException ex)
             {
@@ -165,7 +174,91 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             }
         }
 
-        public void updateCustomerDetails( Customer customer )
+        private void editCustomer( Customer customer )
+        {
+            string updateString = "UPDATE Customer SET firstName = @firstName, " +
+                                    "lastName = @lastName, phone = @phone, email = @email " +
+                                    "WHERE customerID = @customerID";
+
+            SqlCommand command = new SqlCommand(updateString, cnMain);
+
+            command.Parameters.AddWithValue("@customerID", customer.CustomerID);
+            command.Parameters.AddWithValue("@firstName", customer.FirstName);
+            command.Parameters.AddWithValue("@lastName", customer.LastName);
+            command.Parameters.AddWithValue("phone", customer.Phone);
+            command.Parameters.AddWithValue("@email", customer.Email);
+
+            try
+            {
+                cnMain.Open();
+                int row = command.ExecuteNonQuery();
+                Console.WriteLine("Customer" + customer.CustomerID + "Update Sucessfully Successfully\nRow {0} affected", row);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error- Generated. Details: " + ex.ToString());
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+
+        private void deleteCustomer( Customer customer )
+        {
+            string query = "DELETE FROM Customer WHERE customerID = @customerID";
+
+            SqlCommand command = new SqlCommand(query, cnMain);
+
+            command.Parameters.AddWithValue("@customerID", customer.CustomerID);
+
+            try
+            {
+                cnMain.Open();
+                command.ExecuteNonQuery();
+                Console.WriteLine("Customer Deleted Successfully");
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error Generated. Details: " + ex.ToString());
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+
+        public int getLatestCustomerID()
+        {
+            string query = "SELECT MAX( customerID ) FROM Customer";
+            SqlCommand command = new SqlCommand(query, cnMain);
+            SqlDataReader reader;
+
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
+                int customerID = 0;
+                while (reader.Read())
+                {
+                    customerID = reader.GetInt32(0);
+
+                }
+                cnMain.Close();
+                return customerID;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return 0;
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+
+        private void updateCustomerDetails( Customer customer )
         {
             string updateString =   "UPDATE Customer SET firstName = @firstName, " +
                                     "lastName = @lastName, phone = @phone, email = @email " +
@@ -195,40 +288,99 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             }
 
         }
-        #endregion
 
-
-        #region Crud Operations Accounts Table 
-        public Account getAccountWithID( int id )
+        public Customer getCustomer(int id)
         {
-            Account account = null;
-
-            /**Find Account by ID*/
+            /**Find Customer by ID*/
             SqlDataReader reader;
             SqlCommand command;
-            string query = "SELECT * FROM Customers WHERE accountID = @accountID";
+            string query = " SELECT * FROM " + customerTable + " WHERE customerID = @customerID";
 
-            command = new SqlCommand(query, cnMain);    
-            command.Parameters.AddWithValue("@accountID", id);
+            Customer customer = new Customer();
+            command = new SqlCommand(query, cnMain);
+            command.Parameters.AddWithValue("@customerID", id);
 
             try
             {
-                account = new Account();
-                command = new SqlCommand(query, cnMain);
                 cnMain.Open();
                 reader = command.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    account.AccountID = reader.GetInt16(0);
-                    account.AccountName = reader.GetString(1);
-                    if ( reader.GetString(2) == "OKAY")
-                    {
-                        account.Status = Account.CreditStatus.OKAY;
-                    }
-                    account.CreditLimit = int.Parse(reader.GetString(3));
-                    account.CreditBalance = reader.GetDouble(5);
+                    customer.CustomerID = reader.GetInt32(0);
+                    customer.FirstName = reader.GetString(1).Trim();
+                    customer.LastName = reader.GetString(2).Trim();
+                    customer.Phone = reader.GetString(3).Trim();
+                    customer.Email = reader.GetString(4).Trim();
+                    customer.AccountID = reader.GetInt32(5);
+                    customer.AddressID = reader.GetInt16(6);
 
+                }
+                cnMain.Close();
+                return customer;
+            }
+            catch (Exception ex)
+            {
+                cnMain.Close();
+                MessageBox.Show("Cannot find customer with id: " + id + "\n" + ex.ToString());
+                return null;
+            }
+
+        }
+        #endregion
+
+        #region Crud Operations Accounts Table 
+        public void UpdateAccountDatabase( Account account , DatabaseOperation operation )
+        {
+            switch ( operation )
+            {
+                case (DatabaseOperation.UPDATE):
+                    editCustomerAccount(account);
+                    break;
+                case (DatabaseOperation.DELETE):
+                    deleteCustomerAccount(account);
+                    break;
+            }
+        }
+        public Account getAccountWithID( Customer customer )
+        {
+            Account account = null;
+
+            
+            SqlCommand command;
+            string query = "SELECT * FROM Account WHERE accountID = @accountID";
+
+            command = new SqlCommand(query, cnMain);    
+            command.Parameters.AddWithValue("@accountID", customer.AccountID);
+
+            try
+            {
+                account = new Account();
+                cnMain.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while ( reader.Read() )
+                {
+                    Console.WriteLine("Found something");
+                    account.AccountID = reader.GetInt32(0);
+                    account.AccountName = reader.GetString(1);
+                    
+                    switch ( reader.GetInt16(2) )
+                    {
+                        case ( (int) Account.CreditStatus.UNASSIGNED ):
+                            account.Status = Account.CreditStatus.UNASSIGNED;
+                            break;
+                        case ((int)Account.CreditStatus.OKAY):
+                            account.Status = Account.CreditStatus.OKAY;
+                            break;
+                        case ((int)Account.CreditStatus.BLACKLISTED):
+                            account.Status = Account.CreditStatus.BLACKLISTED;
+                            break;
+                    }
+                    account.CreditBalance = reader.GetSqlMoney(3).ToDouble();
+                    account.CreditLimit = reader.GetSqlMoney(4).ToDouble();
+
+                    
                 }
                 cnMain.Close();
                 return account;
@@ -236,96 +388,196 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             catch (Exception ex)
             {
                 cnMain.Close();
-                MessageBox.Show("Cannot find account with id: " + id + "\n" + ex.ToString());
+                MessageBox.Show("Cannot find account with id: " + customer.CustomerID + "\n" + ex.ToString());
                 return null;
             }
         }
-        #endregion
 
-        public Customer getCustomer( int id )
+        private int getAccountID()
         {
-            /**Find Customer by ID*/
+            string query = "SELECT MAX( accountID ) FROM Account";
+            SqlCommand command = new SqlCommand(query, cnMain);
             SqlDataReader reader;
-            SqlCommand command;
-            string query = " SELECT * FROM " + customerTable + " WHERE customerID = " + id;
-
-            Customer customer;
 
             try
             {
-                customer = new Customer();
-                command = new SqlCommand(query, cnMain);
-                cnMain.Open();
                 reader = command.ExecuteReader();
-
-                while ( reader.Read() )
+                int accountID = 0;
+                while (reader.Read())
                 {
-                    customer.CustomerID = reader.GetInt16(0);
-                    customer.FirstName = reader.GetString(1).Trim();
-                    customer.LastName = reader.GetString(2).Trim();
-                    customer.Phone = reader.GetString(3).Trim();
-                    customer.Email = reader.GetString(4).Trim();
-                    customer.AddressID = reader.GetInt16(5);
-                    customer.AccountID = reader.GetInt16(6);
-
+                    accountID = reader.GetInt32(0);
+                    
                 }
-                cnMain.Close();
-                return customer;
+
+                return accountID;
             }
             catch ( Exception ex )
             {
-                cnMain.Close();
-                MessageBox.Show("Cannot find customer with id: " + id + "\n" + ex.ToString());
-                return null;
+                MessageBox.Show(ex.ToString());
+                return 0;
             }
-         
+            finally
+            {
+                cnMain.Close();
+            }
         }
 
-        #region Parameters
-
-        private void Build_Insert_Parameters( Customer customer )
+        private int createAccount( string accountName, int status, double balance, double limit )
         {
-            SqlParameter parameter = default( SqlParameter );
-            parameter = new SqlParameter("@customerID", SqlDbType.Int, 8, "customerID" );
-            daMain.InsertCommand.Parameters.Add(parameter);
+            string insertQuery =    "INSERT INTO Account ( accountName, creditStatus, creditBalance, creditLimit ) " +
+                                    "VALUES ( @accountName, @creditStatus, @creditBalance, @creditLimit )";
 
+            SqlCommand command = new SqlCommand( insertQuery , cnMain);
+
+            command.Parameters.AddWithValue("@accountName", accountName);
+            command.Parameters.AddWithValue("@creditStatus", status);
+            command.Parameters.AddWithValue("@creditBalance", balance);
+            command.Parameters.AddWithValue("@creditLimit", limit);
             
-            parameter = new SqlParameter("@firstName", SqlDbType.NVarChar, 50, "firstName");
-            daMain.InsertCommand.Parameters.Add(parameter);
-
-            parameter = new SqlParameter("@lastName", SqlDbType.NVarChar, 50, "lastName");
-            daMain.InsertCommand.Parameters.Add(parameter);
-
-            parameter = new SqlParameter("@phone", SqlDbType.NVarChar, 50, "phone");
-            daMain.InsertCommand.Parameters.Add(parameter);
-
-            parameter = new SqlParameter("@email", SqlDbType.NVarChar, 50, "email");
-            daMain.InsertCommand.Parameters.Add(parameter);
-
-            parameter = new SqlParameter("@addressID", SqlDbType.Int, 8, "addressID");
-            daMain.InsertCommand.Parameters.Add(parameter);
-
-            parameter = new SqlParameter("@accountID", SqlDbType.Int, 8, "accountID");
-            daMain.InsertCommand.Parameters.Add(parameter);
+            try
+            {
+                cnMain.Open();
+                command.ExecuteNonQuery();
+                int accountID = getAccountID();
+                Console.WriteLine("Account Created successfully here's the account number: {0} ", accountID);
+                cnMain.Close();
+                return accountID;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error- Generated. Details: " + ex.ToString());
+                return 0;
+            }
+            finally
+            {
+                cnMain.Close();
+            }
         }
 
-        private void Create_Insert_Command ( Customer customer )
+        private void editCustomerAccount(Account account)
         {
-            string insert = "INSERT INTO Customer ( customerID, firstName, lastName, phone, email, addressID, accountID ) ";
-            string values = "VALUES ( @customerID, @firstName, @lastName, @phone, @email, @addressID, @accountID )";
-            string insertCommand = insert + values;
+            string query =  "UPDATE Account SET accountName = @accountName, creditStatus = @creditStatus, " +
+                            "creditBalance = @creditBalance, creditLimit = @creditLimit " +
+                            "WHERE accountID = @accountID";
 
-            daMain.InsertCommand = new SqlCommand(insertCommand, cnMain);
+            SqlCommand command = new SqlCommand(query, cnMain);
 
-            Build_Insert_Parameters( customer );
+            command.Parameters.AddWithValue("@accountID", account.AccountID);
+            command.Parameters.AddWithValue("@accountName", account.AccountName);
+            command.Parameters.AddWithValue("@creditStatus", account.Status);
+            command.Parameters.AddWithValue("@creditBalance", account.CreditBalance);
+            command.Parameters.AddWithValue("@creditLimit", account.CreditLimit);
+
+            try
+            {
+                cnMain.Open();
+                command.ExecuteNonQuery();
+                Console.WriteLine("Customer Updated Successfully");
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error Generated. Details: " + ex.ToString());
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+
+        private void deleteCustomerAccount( Account account )
+        {
+            string query = "DELETE FROM Account WHERE accountID = @accountID";
+
+            SqlCommand command = new SqlCommand(query, cnMain);
+
+            command.Parameters.AddWithValue("@accountID", account.AccountID);
+            try
+            {
+                cnMain.Open();
+                command.ExecuteNonQuery();
+                Console.WriteLine("Account deleted Successfully");
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error Generated. Details: " + ex.ToString());
+            }
+            finally
+            {
+                cnMain.Close();
+            }
         }
         #endregion
+
+        #region CRUD OPERATIONS Address
+        private int createAddress( string streetName, string town, string city, int postalCode)
+        {
+            string query =  "INSERT INTO Address ( streetName, town, city, postalCode ) Values " +
+                            "( @streetName, @town, @city, @postalCode )";
+            SqlCommand command = new SqlCommand(query, cnMain);
+
+            command.Parameters.AddWithValue("@streetName", streetName);
+            command.Parameters.AddWithValue("@town", town);
+            command.Parameters.AddWithValue("@city", city);
+            command.Parameters.AddWithValue("@postalCode", postalCode);
+
+            try
+            {
+                cnMain.Open();
+                command.ExecuteNonQuery();
+                int addressID = getLatestAddressID();
+                Console.WriteLine("Address created succesfully id: {0}", addressID);
+                cnMain.Close();
+                return addressID;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+
+        private int getLatestAddressID()
+        {
+            string query = "SELECT MAX( addressID ) FROM Address";
+            SqlCommand command = new SqlCommand(query, cnMain);
+            SqlDataReader reader;
+
+            try
+            {
+                reader = command.ExecuteReader();
+                int addressID = 0;
+                while (reader.Read())
+                {
+                    addressID = reader.GetInt16(0);
+
+                }
+
+                return addressID;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return 0;
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
         #endregion
 
         #region Property Methods
         public Collection<Customer> Customers
         {
-            get { return customers; }
+            get 
+            {
+                FillCustomers();   
+                return customers; 
+            }
         }
 
         public Collection<Account> Accounts
