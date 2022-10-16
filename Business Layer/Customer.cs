@@ -36,6 +36,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             customerID = 0;
             addressID = 0;
         }
+
+        public Customer ( string firstName, string lastName, string phone, string email) : base( firstName, lastName, phone, email )
+        {
+            customerID = 0;
+            addressID = 0;
+        }
         #endregion
 
         #region Property Methods
