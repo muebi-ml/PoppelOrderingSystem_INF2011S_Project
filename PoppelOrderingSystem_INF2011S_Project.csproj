@@ -64,6 +64,7 @@
     <Compile Include="Business Layer\Account.cs" />
     <Compile Include="Business Layer\Address.cs" />
     <Compile Include="Business Layer\Customer.cs" />
+    <Compile Include="Business Layer\CustomerController.cs" />
     <Compile Include="Business Layer\DeliveryNote.cs" />
     <Compile Include="Business Layer\Employee.cs" />
     <Compile Include="Business Layer\Invoice.cs" />

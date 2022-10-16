@@ -91,7 +91,20 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
         #endregion
 
         #region CRUD Operations Customer
-        private Account getCustomeWithAccountID( int id )
+
+        public void UpdateCustomerDatabase ( Customer customer, DatabaseOperation operation )
+        {
+            switch ( operation )
+            {
+                case (DatabaseOperation.UPDATE):
+                    editCustomer( customer );
+                    break;
+                case (DatabaseOperation.DELETE):
+                    deleteCustomer( customer );
+                    break;
+            }
+        }
+        private Account getAccountForCustomerID( int id )
         {
             Account account = new Account();
             SqlDataReader reader;
@@ -123,7 +136,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
 
         }
         
-        private void addCustomer( Customer customer, Account account, Address address )
+        public void addCustomer( Customer customer, Account account, Address address )
         {
             string insert = "INSERT INTO Customer ( firstName, lastName, phone, email, addressID, accountID ) VALUES " +
                             "( @firstName, @lastName, @phone, @email, @addressID, @accountID )";
@@ -163,10 +176,11 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
 
         private void editCustomer( Customer customer )
         {
-            string query = "UPDATE Customer SET firstName = @firstName, lastName = @lastName, phone = @phone, email = @email " +
-                            "WHERE customerID = @customerID";
+            string updateString = "UPDATE Customer SET firstName = @firstName, " +
+                                    "lastName = @lastName, phone = @phone, email = @email " +
+                                    "WHERE customerID = @customerID";
 
-            SqlCommand command = new SqlCommand(query, cnMain);
+            SqlCommand command = new SqlCommand(updateString, cnMain);
 
             command.Parameters.AddWithValue("@customerID", customer.CustomerID);
             command.Parameters.AddWithValue("@firstName", customer.FirstName);
@@ -177,12 +191,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             try
             {
                 cnMain.Open();
-                command.ExecuteNonQuery();
-                Console.WriteLine("Customer Updated Successfully");
+                int row = command.ExecuteNonQuery();
+                Console.WriteLine("Customer" + customer.CustomerID + "Update Sucessfully Successfully\nRow {0} affected", row);
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error Generated. Details: " + ex.ToString());
+                Console.WriteLine("Error- Generated. Details: " + ex.ToString());
             }
             finally
             {
@@ -214,7 +228,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             }
         }
 
-        private int getLatestCustomerID()
+        public int getLatestCustomerID()
         {
             string query = "SELECT MAX( customerID ) FROM Customer";
             SqlCommand command = new SqlCommand(query, cnMain);
@@ -316,6 +330,18 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
         #endregion
 
         #region Crud Operations Accounts Table 
+        public void UpdateAccountDatabase( Account account , DatabaseOperation operation )
+        {
+            switch ( operation )
+            {
+                case (DatabaseOperation.UPDATE):
+                    editCustomerAccount(account);
+                    break;
+                case (DatabaseOperation.DELETE):
+                    deleteCustomerAccount(account);
+                    break;
+            }
+        }
         public Account getAccountWithID( Customer customer )
         {
             Account account = null;
@@ -457,6 +483,29 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
                 cnMain.Close();
             }
         }
+
+        private void deleteCustomerAccount( Account account )
+        {
+            string query = "DELETE FROM Account WHERE accountID = @accountID";
+
+            SqlCommand command = new SqlCommand(query, cnMain);
+
+            command.Parameters.AddWithValue("@accountID", account.AccountID);
+            try
+            {
+                cnMain.Open();
+                command.ExecuteNonQuery();
+                Console.WriteLine("Account deleted Successfully");
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error Generated. Details: " + ex.ToString());
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
         #endregion
 
         #region CRUD OPERATIONS Address
@@ -524,7 +573,11 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
         #region Property Methods
         public Collection<Customer> Customers
         {
-            get { return customers; }
+            get 
+            {
+                FillCustomers();   
+                return customers; 
+            }
         }
 
         public Collection<Account> Accounts
