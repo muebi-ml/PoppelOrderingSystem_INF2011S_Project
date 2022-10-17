@@ -20,8 +20,15 @@ namespace PoppelOrderingSystem_INF2011S_Project
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+<<<<<<< HEAD
+            Application.Run(new OrderParentForm()); // form test run
+/*
+<<<<<<< HEAD
+=======
+=======
             //Application.Run(new Form1());
 
+>>>>>>> e4fecefbf2141cf2c9cb477481c83e1a12a083d0
 
             /*CustomerDB db = new CustomerDB();
             
@@ -41,15 +48,15 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Customer customer2 = new Customer("990404", "Mukhethwa", "Muebi", "0608055010", "muebiml1999@gmail.com", 5, 4);
             customer2.AccountID = 3;
             db.updateCustomerDetails(customer2);
-            Console.WriteLine(db.getCustomer(2)); */
+            Console.WriteLine(db.getCustomer(2)); 
 
 
             // Test run to display all products
             OrderDB order = new OrderDB();
 
-            /*Console.WriteLine("Show all products");
+            Console.WriteLine("Show all products");
             Console.WriteLine();
-            order.DisplayProducts();*/
+            order.DisplayProducts();
 
             // Test run to add Order
             
@@ -60,7 +67,11 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Console.WriteLine(order.getOrderByOrderNumber(10200));
 
             
+<<<<<<< HEAD
+>>>>>>> karabo-code **/
+=======
 
+>>>>>>> e4fecefbf2141cf2c9cb477481c83e1a12a083d0
         }
     }
 }
