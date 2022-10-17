@@ -456,7 +456,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
         {
             string query = "SELECT * FROM Product WHERE productCode = @productCode";
             SqlCommand command = new SqlCommand( query, cnMain );
-
+            command.Parameters.AddWithValue("@productCode", id);
             Product product = null;
             try
             {
@@ -582,6 +582,14 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
                     items.Add(item);    
                 }
                 cnMain.Close();
+
+                foreach ( OrderItem orderItem in items )
+                {
+                    
+                    Product product = getProductByCode( orderItem.ProductCode );
+                    orderItem.Product = product;
+
+                }
                 return items;
             }
             catch( Exception ex)

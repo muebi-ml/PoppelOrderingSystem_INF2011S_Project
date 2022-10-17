@@ -34,7 +34,7 @@
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.loginButton = new System.Windows.Forms.Button();
             this.poppelName = new System.Windows.Forms.Label();
-            this.loginToContinueLabel = new System.Windows.Forms.Label();
+            this.loginPrompt = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // userNameLabel
@@ -70,6 +70,7 @@
             this.usernameTextBox.Name = "usernameTextBox";
             this.usernameTextBox.Size = new System.Drawing.Size(354, 26);
             this.usernameTextBox.TabIndex = 2;
+            this.usernameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.usernameTextBox_KeyPress);
             // 
             // passwordTextBox
             // 
@@ -83,6 +84,7 @@
             this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(354, 26);
             this.passwordTextBox.TabIndex = 3;
+            this.passwordTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.passwordTextBox_KeyPress);
             // 
             // loginButton
             // 
@@ -95,6 +97,7 @@
             this.loginButton.TabIndex = 4;
             this.loginButton.Text = "Login";
             this.loginButton.UseVisualStyleBackColor = false;
+            this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
             // 
             // poppelName
             // 
@@ -108,15 +111,15 @@
             this.poppelName.Text = "Poppel Ordering System";
             this.poppelName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // loginToContinueLabel
+            // loginPrompt
             // 
-            this.loginToContinueLabel.AutoSize = true;
-            this.loginToContinueLabel.ForeColor = System.Drawing.Color.Brown;
-            this.loginToContinueLabel.Location = new System.Drawing.Point(664, 406);
-            this.loginToContinueLabel.Name = "loginToContinueLabel";
-            this.loginToContinueLabel.Size = new System.Drawing.Size(178, 18);
-            this.loginToContinueLabel.TabIndex = 6;
-            this.loginToContinueLabel.Text = "login to continue";
+            this.loginPrompt.AutoSize = true;
+            this.loginPrompt.ForeColor = System.Drawing.Color.Brown;
+            this.loginPrompt.Location = new System.Drawing.Point(611, 411);
+            this.loginPrompt.Name = "loginPrompt";
+            this.loginPrompt.Size = new System.Drawing.Size(178, 18);
+            this.loginPrompt.TabIndex = 6;
+            this.loginPrompt.Text = "login to continue";
             // 
             // MainLoginForm
             // 
@@ -124,7 +127,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SeaGreen;
             this.ClientSize = new System.Drawing.Size(1333, 623);
-            this.Controls.Add(this.loginToContinueLabel);
+            this.Controls.Add(this.loginPrompt);
             this.Controls.Add(this.poppelName);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.passwordTextBox);
@@ -149,6 +152,6 @@
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Label poppelName;
-        private System.Windows.Forms.Label loginToContinueLabel;
+        private System.Windows.Forms.Label loginPrompt;
     }
 }

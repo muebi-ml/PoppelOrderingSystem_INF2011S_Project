@@ -16,12 +16,21 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
         private int childFormNumber = 0;
         private OrderController OrderController;
         private CustomerController CustomerController;
+        private MarkettingClerk clerk;
 
         public OrderParentForm()
         {
             InitializeComponent();
             OrderController = new OrderController();
             CustomerController = new CustomerController();
+        }
+
+        public OrderParentForm(MarkettingClerk clerk)
+        {
+            this.clerk = clerk;
+            OrderController = new OrderController();
+            CustomerController = new CustomerController();
+            InitializeComponent();
         }
 
         private void ShowNewForm(object sender, EventArgs e)

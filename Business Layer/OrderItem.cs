@@ -34,7 +34,10 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #endregion
 
         #region Property Methods 
-        public Product Product { get { return product; } }
+        public Product Product { 
+            get { return product; } 
+            set { product = value; }
+        }
         public Order Order { get { return order; } }
         public int Quantity { 
             get { return quantity; } 
