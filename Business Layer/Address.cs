@@ -59,5 +59,10 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             }   
         }
         #endregion
+
+        public override string ToString()
+        {
+            return streetName + "\n" + town + "\n" + city + "\n" + postalCode.ToString();
+        }
     }
 }

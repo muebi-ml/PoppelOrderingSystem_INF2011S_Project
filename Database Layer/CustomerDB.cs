@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Security.Principal;
@@ -82,6 +83,8 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             }
 
         }
+
+
 
         public Collection<Customer> getAllCustomers()
         {
@@ -161,6 +164,10 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             {
                 cnMain.Open();
                 command.ExecuteNonQuery();
+                cnMain.Close();
+                MessageBox.Show("Customer created successfully. " +
+                                "\nCustomer ID: " + getLatestCustomerID() + 
+                                "\nAccount number: " + account.AccountID);
                 Console.WriteLine("Customer Added Successfully");
                 customers.Add(customer);
             }
@@ -317,6 +324,9 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
 
                 }
                 cnMain.Close();
+
+                customer.Account = getAccountWithID(customer);
+                customer.Address = getAddressWithID( customer.AddressID );
                 return customer;
             }
             catch (Exception ex)
@@ -328,6 +338,52 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
 
         }
         #endregion
+
+        public bool CustomerExists(int id)
+        {
+            /**Find Customer by ID*/
+            SqlDataReader reader;
+            SqlCommand command;
+            string query = " SELECT * FROM " + customerTable + " WHERE customerID = @customerID";
+
+            Customer customer = null;
+            command = new SqlCommand(query, cnMain);
+            command.Parameters.AddWithValue("@customerID", id);
+
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    customer = new Customer();
+
+                    customer.CustomerID = reader.GetInt32(0);
+                    customer.FirstName = reader.GetString(1).Trim();
+                    customer.LastName = reader.GetString(2).Trim();
+                    customer.Phone = reader.GetString(3).Trim();
+                    customer.Email = reader.GetString(4).Trim();
+                    customer.AccountID = reader.GetInt32(5);
+                    customer.AddressID = reader.GetInt16(6);
+
+                }
+                cnMain.Close();
+                if (customer != null)
+                {
+                    return true;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                cnMain.Close();
+                MessageBox.Show("Cannot find customer with id: " + id + "\n" + ex.ToString());
+                
+            }
+            return false;
+
+        }
 
         #region Crud Operations Accounts Table 
         public void UpdateAccountDatabase( Account account , DatabaseOperation operation )
@@ -567,6 +623,50 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             {
                 cnMain.Close();
             }
+        }
+
+        private Address getAddressWithID( int id )
+        {
+            string query = "SELECT * FROM Address WHERE addressID = @addressID";
+            SqlCommand command = new SqlCommand(query, cnMain);
+            SqlDataReader reader;
+            Address address;
+
+            command.Parameters.AddWithValue("@addressID", id);
+
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
+                string street = "";
+                string town = "";
+                string city = ""; 
+                int postalCode = 0;
+                while (reader.Read())
+                {
+                    street = reader.GetString(1);
+                    town = reader.GetString(2);
+                    city = reader.GetString(3);
+                    postalCode = reader.GetInt16(4);
+
+                      
+                }
+                address = new Address(street, town, city, postalCode);
+                cnMain.Close();
+                return address;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+
+            return null;
         }
         #endregion
 

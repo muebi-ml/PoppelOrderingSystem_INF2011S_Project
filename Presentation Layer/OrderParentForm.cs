@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PoppelOrderingSystem_INF2011S_Project.Business_Layer;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,10 +14,14 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
     public partial class OrderParentForm : Form
     {
         private int childFormNumber = 0;
-        
+        private OrderController OrderController;
+        private CustomerController CustomerController;
+
         public OrderParentForm()
         {
             InitializeComponent();
+            OrderController = new OrderController();
+            CustomerController = new CustomerController();
         }
 
         private void ShowNewForm(object sender, EventArgs e)

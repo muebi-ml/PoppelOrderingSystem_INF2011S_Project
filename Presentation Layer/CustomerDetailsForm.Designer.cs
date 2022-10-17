@@ -125,6 +125,7 @@
             this.firstNameTextBox.Name = "firstNameTextBox";
             this.firstNameTextBox.Size = new System.Drawing.Size(197, 20);
             this.firstNameTextBox.TabIndex = 8;
+            this.firstNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.firstNameTextBox_KeyPress);
             // 
             // lastNameTextBox
             // 
@@ -132,20 +133,25 @@
             this.lastNameTextBox.Name = "lastNameTextBox";
             this.lastNameTextBox.Size = new System.Drawing.Size(197, 20);
             this.lastNameTextBox.TabIndex = 9;
+            this.lastNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.lastNameTextBox_KeyPress);
             // 
             // phoneNumberTextBox
             // 
             this.phoneNumberTextBox.Location = new System.Drawing.Point(237, 167);
+            this.phoneNumberTextBox.MaxLength = 10;
             this.phoneNumberTextBox.Name = "phoneNumberTextBox";
             this.phoneNumberTextBox.Size = new System.Drawing.Size(197, 20);
             this.phoneNumberTextBox.TabIndex = 10;
+            this.phoneNumberTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.phoneNumberTextBox_KeyPress);
             // 
             // customerIDTextBox
             // 
             this.customerIDTextBox.Location = new System.Drawing.Point(237, 72);
+            this.customerIDTextBox.MaxLength = 7;
             this.customerIDTextBox.Name = "customerIDTextBox";
             this.customerIDTextBox.Size = new System.Drawing.Size(197, 20);
             this.customerIDTextBox.TabIndex = 11;
+            this.customerIDTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.customerIDTextBox_KeyPress);
             // 
             // emailTextBox
             // 
@@ -153,6 +159,7 @@
             this.emailTextBox.Name = "emailTextBox";
             this.emailTextBox.Size = new System.Drawing.Size(197, 20);
             this.emailTextBox.TabIndex = 12;
+            this.emailTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.emailTextBox_KeyPress);
             // 
             // streetNameTextBox
             // 
@@ -160,6 +167,7 @@
             this.streetNameTextBox.Name = "streetNameTextBox";
             this.streetNameTextBox.Size = new System.Drawing.Size(197, 20);
             this.streetNameTextBox.TabIndex = 13;
+            this.streetNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.streetNameTextBox_KeyPress);
             // 
             // townTextBox
             // 
@@ -167,6 +175,7 @@
             this.townTextBox.Name = "townTextBox";
             this.townTextBox.Size = new System.Drawing.Size(197, 20);
             this.townTextBox.TabIndex = 14;
+            this.townTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.townTextBox_KeyPress);
             // 
             // cityTextBox
             // 
@@ -174,6 +183,7 @@
             this.cityTextBox.Name = "cityTextBox";
             this.cityTextBox.Size = new System.Drawing.Size(197, 20);
             this.cityTextBox.TabIndex = 15;
+            this.cityTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cityTextBox_KeyPress);
             // 
             // postalCodeTextBox
             // 
@@ -181,6 +191,7 @@
             this.postalCodeTextBox.Name = "postalCodeTextBox";
             this.postalCodeTextBox.Size = new System.Drawing.Size(197, 20);
             this.postalCodeTextBox.TabIndex = 16;
+            this.postalCodeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.postalCodeTextBox_KeyPress);
             // 
             // continueButton
             // 
