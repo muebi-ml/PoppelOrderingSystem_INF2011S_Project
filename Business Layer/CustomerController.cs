@@ -33,6 +33,10 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             UpdateDataSource();
         }
 
+        public bool DoesCustomerExist( int id )
+        {
+            return customerDB.CustomerExists(id);
+        }
         public int CreateCustomer( Customer customer, Account account, Address address )
         {
             customerDB.addCustomer(customer, account, address);

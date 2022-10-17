@@ -8,10 +8,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 {
-    public class CreateAnOrder : AccountDetailsForm
+    public class CreateAnOrder : Form
     {
         private System.Windows.Forms.Button newCustomerOption;
         private System.Windows.Forms.Button existingCustomerButton;
@@ -67,13 +68,15 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
         private void existingCustomerButton_Click(object sender, EventArgs e)
         {
-
+            // after choosing "Existing Customer" option open CustomerDetailsForm
+            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm(false);
+            customerDetailsForm.Show();
         }
 
         private void newCustomerOption_Click(object sender, EventArgs e)
         {
             // after choosing "New Customer" option open CustomerDetailsForm
-            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm();
+            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm(true);
             customerDetailsForm.Show();
 
         }
