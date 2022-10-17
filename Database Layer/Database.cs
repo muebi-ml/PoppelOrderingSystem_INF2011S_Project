@@ -123,7 +123,6 @@ namespace PoppelOrderingSystem_INF2011S_Project.DatabaseLayer
         }
         #endregion
 
-
         #region Update the data source 
 
         protected bool UpdateDataSource(string sqlLocal, string table)
