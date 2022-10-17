@@ -40,6 +40,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
             customerIDLabel.Visible = !this.isNew;
         }
 
+        private void ShowCustomerID( bool show )
+        {
+            customerIDTextBox.Visible = show;
+            customerIDLabel.Visible = show;
+        }
+
         private void showSubmitExistingCustomerForm()
         {
             if ( customerIDTextBox.Text.Length == 6)
@@ -55,6 +61,44 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
         private void CustomerDetailsForm_Load(object sender, EventArgs e)
         {
+
+        }
+
+        private void DisplayCustomer( Customer customer )
+        {
+            customerIDTextBox.Text = customer.CustomerID.ToString();
+            firstNameTextBox.Text = customer.FirstName;
+            lastNameTextBox.Text = customer.LastName;
+            customerIDTextBox.Enabled = false;
+            firstNameTextBox.Enabled = false;
+            lastNameTextBox.Enabled = false;
+            
+            if ( customer.Phone.Length > 10 )
+            {
+                string phone = customer.Phone;
+                phone = phone.TrimStart(new char[] { '+', '2', '7' });
+                phoneNumberTextBox.Text = "0"+phone;
+            }
+            else
+            {
+                phoneNumberTextBox.Text = customer.Phone;
+            }
+            phoneNumberTextBox.Enabled = false;
+            emailTextBox.Text = customer.Email;
+            streetNameTextBox.Text = customer.Address.StreetName;
+            townTextBox.Text = customer.Address.Town;
+            cityTextBox.Text = customer.Address.City;
+            postalCodeTextBox.Text = customer.Address.PostalCode.ToString();
+
+            emailTextBox.Enabled = false;
+            streetNameTextBox.Enabled = false;
+            townTextBox.Enabled = false;
+            cityTextBox.Enabled = false;
+            postalCodeTextBox.Enabled = false;
+
+            ShowTextBoxes(true);
+            ShowCustomerID(true);
+            ShowLabels(true);
 
         }
 
@@ -76,9 +120,10 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
                 Account account = new Account();
                 account.AccountName = firstName;
 
-                customerController.CreateCustomer(customer, account, address);
+                int customerID = customerController.CreateCustomer(customer, account, address);
+                customer = customerController.FindCustomerByID(customerID);
 
-
+                DisplayCustomer(customer);
                 //MessageBox.Show("Customer details successfully submitted!");
             }
             else
@@ -89,6 +134,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
                     Customer customer;
 
                     customer = customerController.FindCustomerByID(customerID);
+                    DisplayCustomer(customer);
                     MessageBox.Show(customer.ToString());
                     
                 }
@@ -99,12 +145,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
                 
             }
             /* after adding customer details click submit to submit data into the database */
-            PopulateCustomer(customer);
+            //PopulateCustomer(customer);
             
-            customerController.UpdataCustomerDatabase(customer, 0); // DatabaseOperation state is to create a customer therefore CREATE = 0
-            ClearAllCustomerTextboxes();
-            ShowLabels(false); // hide labels
-            ShowTextBoxes(false); // hide text boxes
+            //customerController.UpdataCustomerDatabase(customer, 0); // DatabaseOperation state is to create a customer therefore CREATE = 0
+            //ClearAllCustomerTextboxes();
+            //ShowLabels(false); // hide labels
+            //ShowTextBoxes(false); // hide text boxes
 
         }
 
@@ -112,6 +158,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
         {
             /* after clicking the submit button click continue to open account details form */
             AccountDetailsForm accountDetails = new AccountDetailsForm();
+            this.Hide();
             accountDetails.Show();
 
         }
@@ -253,7 +300,6 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
         private void ShowLabels(bool value)
         {
             enterDetailsLabel.Visible = value;
-            
             firstNameLabel.Visible = value;
             lastNameLabel.Visible = value;
             phoneNumberLabel.Visible = value;
