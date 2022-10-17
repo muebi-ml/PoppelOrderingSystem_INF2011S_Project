@@ -88,11 +88,41 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PoppelOrderingSystemDatabaseDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Presentation Layer\TemplateForm.cs">
+    <Compile Include="Presentation Layer\CustomerDetailsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\CustomerDetailsForm.Designer.cs">
+      <DependentUpon>CustomerDetailsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation Layer\AccountDetailsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\AccountDetailsForm.Designer.cs">
+      <DependentUpon>AccountDetailsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation Layer\OrderParentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\OrderParentForm.Designer.cs">
+      <DependentUpon>OrderParentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation Layer\CreateAnOrder.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Presentation Layer\AccountDetailsForm.resx">
+      <DependentUpon>AccountDetailsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\CustomerDetailsForm.resx">
+      <DependentUpon>CustomerDetailsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\OrderParentForm.resx">
+      <DependentUpon>OrderParentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\CreateAnOrder.resx">
+      <DependentUpon>CreateAnOrder.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

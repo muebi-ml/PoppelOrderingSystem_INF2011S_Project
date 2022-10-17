@@ -1,5 +1,6 @@
 ﻿using PoppelOrderingSystem_INF2011S_Project.Business_Layer;
 using PoppelOrderingSystem_INF2011S_Project.Database_Layer;
+using PoppelOrderingSystem_INF2011S_Project.Presentation_Layer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,8 +20,8 @@ namespace PoppelOrderingSystem_INF2011S_Project
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Form1());
-
+            Application.Run(new OrderParentForm()); // form test run
+/*
 <<<<<<< HEAD
 =======
 
@@ -43,15 +44,15 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Customer customer2 = new Customer("990404", "Mukhethwa", "Muebi", "0608055010", "muebiml1999@gmail.com", 5, 4);
             customer2.AccountID = 3;
             db.updateCustomerDetails(customer2);
-            Console.WriteLine(db.getCustomer(2)); */
+            Console.WriteLine(db.getCustomer(2)); 
 
 
             // Test run to display all products
             OrderDB order = new OrderDB();
 
-            /*Console.WriteLine("Show all products");
+            Console.WriteLine("Show all products");
             Console.WriteLine();
-            order.DisplayProducts();*/
+            order.DisplayProducts();
 
             // Test run to add Order
             
@@ -62,7 +63,7 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Console.WriteLine(order.getOrderByOrderNumber(10200));
 
             
->>>>>>> karabo-code
+>>>>>>> karabo-code **/
         }
     }
 }
