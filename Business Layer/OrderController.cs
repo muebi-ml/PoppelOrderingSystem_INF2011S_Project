@@ -100,5 +100,19 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
 
         }
         #endregion
+
+        #region CRUD Picking list
+        public Collection<OrderItem> GeneratePickingList( int orderID )
+        {
+            return orderDB.GeneratePickingList(orderID);
+        }
+        #endregion
+
+        #region Generate Expired Items List 
+        public Collection<Product> GenerateExpiredProducts()
+        {
+            return orderDB.GenerateExpiryReport();
+        }
+        #endregion
     }
 }

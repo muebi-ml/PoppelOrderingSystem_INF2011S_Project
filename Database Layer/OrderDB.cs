@@ -387,7 +387,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
 
         }
 
-        public Collection<Product> generateExpiryReport()
+        public Collection<Product> GenerateExpiryReport()
         {
             string query = "SELECT * FROM Product WHERE expiryDate < GETDATE()";
             SqlCommand command = new SqlCommand(query, cnMain);
@@ -552,6 +552,45 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
                 Console.WriteLine("Failed to add order items");
                 cnMain.Close();
             }
+        }
+        #endregion
+
+        #region Picking List CRUD 
+        public Collection<OrderItem> GeneratePickingList( int orderID )
+        {
+            Collection<OrderItem> items = new Collection<OrderItem> ();
+
+            string query = "SELECT * FROM OrderItem WHERE orderID = @orderID";
+
+
+            SqlDataReader reader;
+            OrderItem item;
+            SqlCommand command = new SqlCommand( query, cnMain );
+            command.Parameters.AddWithValue("@orderID", orderID);
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
+
+                while ( reader.Read() )
+                {
+                    item = new OrderItem();
+                    item.OrderID = orderID;
+                    item.ProductCode = reader.GetInt32(2);
+                    item.Quantity = reader.GetInt16(3);
+
+                    items.Add(item);    
+                }
+                cnMain.Close();
+                return items;
+            }
+            catch( Exception ex)
+            {
+                Console.WriteLine(ex.Message);  
+                cnMain.Close( );    
+            }
+            return items;
+
         }
         #endregion
 
