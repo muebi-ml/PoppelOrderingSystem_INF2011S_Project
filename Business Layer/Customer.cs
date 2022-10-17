@@ -13,6 +13,8 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #region Attributes 
         private int addressID, accountID;
         private int customerID;
+        private Address address;
+        private Account account;
 
         #endregion
 
@@ -41,6 +43,8 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         {
             customerID = 0;
             addressID = 0;
+            address = null;
+            account = new Account();
         }
         #endregion
 
@@ -61,14 +65,63 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             get { return accountID; }
             set { accountID = value; }  
         }
+
+        public Account Account
+        {
+            get { return account; }
+            set { account = value; }
+        }
+
+        public Address Address
+        {
+            get { return address; } 
+            set { address = value; }
+        }
         #endregion
 
         #region ToString
         public override string ToString()
         {
-            return 
-                base.ToString() + "\nCustomerID: " + customerID + 
-                "\nAccountID: " + accountID;
+            bool missingAddress = false;
+            bool missingAccount = false;
+            bool missingBoth = false;
+
+            if ( address == null )
+            {
+                missingAddress = true;
+            }
+            if ( account == null )
+            {
+                missingAccount = true;
+                if ( missingAddress)
+                {
+                    missingBoth = true;
+                }
+            }
+
+            if ( missingBoth )
+            {
+                return
+                 "\nCustomer ID: " + customerID + "\n" + base.ToString() + 
+                 "\nAccount ID: " + accountID;
+            }
+            else if ( missingAddress)
+            {
+                return
+                 "\nCustomer ID: " + customerID + "\n" + base.ToString() +
+                 "\n" + account.ToString() ;
+            }
+            else if ( missingAccount )
+            {
+                return
+                 "\nCustomer ID: " + customerID + "\nAccount ID: " + accountID.ToString() + "\n" + base.ToString() +
+                 "\n" + address.ToString();
+            }
+            else
+            {
+                return "\nCustomer ID: " + customerID + "\n" + base.ToString() + "\n" 
+                    + address.ToString() + "\n" + account.ToString();
+            }
         }
         #endregion
     }

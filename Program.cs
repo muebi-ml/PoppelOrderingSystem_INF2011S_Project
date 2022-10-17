@@ -20,7 +20,7 @@ namespace PoppelOrderingSystem_INF2011S_Project
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new OrderParentForm());
+            Application.Run(new OrderParentForm());        
 
         }
     }
