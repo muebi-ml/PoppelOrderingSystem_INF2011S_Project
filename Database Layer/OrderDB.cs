@@ -17,13 +17,6 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
     public class OrderDB : Database
     {
         #region Data members
-
-        private static string orderTbl = "Order";
-        private string orderQuery = "SELECT * FROM " + orderTbl;
-
-        private static string productTbl = "Product";
-        private string productQuery = "SELECT * FROM " + productTbl;
-
         /* Collections */
         private Collection<Order> orders;
         private Collection<Product> products;
@@ -34,67 +27,270 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
         {
             orders = new Collection<Order>();
             products = new Collection<Product>();
-
-            FillDataSet(orderQuery, orderTbl);
-            FillDataSet(productQuery, productTbl);
-            Add2Collection(productTbl);
+            readOrders();
+            addProductsToCollection();
         }
         #endregion
 
-        // Products methods
-        #region Add products to collection method
+        #region Order Crud Operations
 
-        private void Add2Collection(string table)
+        public void readOrders()
         {
-            //Declare references to a myRow object and an Product object
-            DataRow myRow = null;
-            Product product;
+            string query = "SELECT * FROM dbo.[Order]";
+            SqlCommand command = new SqlCommand(query, cnMain );
+            SqlDataReader reader;
+            Order order;
 
-            //READ from the table  
-            foreach (DataRow myRow_loopVariable in dsMain.Tables[table].Rows)
+            try
             {
-                myRow = myRow_loopVariable;
-                if (!(myRow.RowState == DataRowState.Deleted))
+                cnMain.Open();
+                reader = command.ExecuteReader();
+
+                while (reader.Read() )
                 {
-                    //Instantiate a new Product object
-                    product = new Product();
+                    int orderID = reader.GetInt32(0);
+                    int customerID = reader.GetInt32(1);
+                    int clerkID = reader.GetInt16(2);
+                    double orderTotal = reader.GetSqlMoney(3).ToDouble();
 
-                    //Obtain product attributes from the specific field in the row in the table
-
-                    product.ProductCode = Convert.ToString(myRow["productCode"]).TrimEnd();
-                    product.ProductName = Convert.ToString(myRow["productName"]).TrimEnd();
-                    product.Price = Convert.ToDouble(myRow["price"]);
-                    product.ExpiryDate = Convert.ToDateTime(myRow["expiryDate"]);
-                    product.InStockLevel = Convert.ToInt16(myRow["inStock"]);
-                    product.ProductType = (Product.Category)Convert.ToInt16(myRow["categoryID"]);
+                    Order.Status status = Order.Status.NOSTATUS;
+                    switch ( (int) reader.GetInt16(4) )
+                    {
+                        case ((int) Order.Status.NOSTATUS):
+                            status = Order.Status.NOSTATUS;
+                            
+                            break;
+                        case ((int) Order.Status.ONHOLD):
+                            status = Order.Status.ONHOLD;
+                            
+                            break;
+                        case ((int) Order.Status.INPROCESS):
+                            status = Order.Status.INPROCESS;
+                            
+                            break;
+                        case ((int) Order.Status.CONFIRMED):
+                            status = Order.Status.CONFIRMED;
+                            
+                            break;
+                        case ((int ) Order.Status.SHIPPED):
+                            status = Order.Status.SHIPPED;
+                            
+                            break;
+                        case ((int)Order.Status.RETURNED):
+                            status = Order.Status.RETURNED;
+                            
+                            break;
+                    }
 
                     
-                    // add order to collection
-                    products.Add(product);
+                    DateTime date = reader.GetDateTime(5);
+                    date = DateTime.Now;
+                    
+                    order = new Order( orderID, customerID, clerkID, orderTotal, status, date );
+                    orders.Add( order );
+                    
+
                 }
+                cnMain.Close();
             }
-        }
-        #endregion
-
-        #region Display all products from collection
-        public void DisplayProducts()
-        {
-            Console.WriteLine("{0} Products:", products.Count);
-            Console.WriteLine();
-            foreach (Product item in products)
+            catch ( Exception ex )
             {
-                Console.WriteLine(item);
-                Console.WriteLine();
+                Console.WriteLine( ex.Message );
             }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+        public void createOrder( Order order )
+        {
+            string query = "INSERT INTO dbo.[Order] ( customerID, clerkID, orderTotal, orderStatus, dateCompleted ) " +
+                            "VALUES ( @customerID, @clerkID, @orderTotal, @orderStatus, @dateCompleted )";
+
+            SqlCommand command = new SqlCommand(query, cnMain);
+
+            command.Parameters.AddWithValue("@customerID", order.CustomerID);
+            command.Parameters.AddWithValue("@clerkID", order.ClerkID);
+            command.Parameters.AddWithValue("@orderTotal", order.OrderTotal);
+            Order.Status status = order.OrderStatus;
+            switch (status)
+            {
+                case (Order.Status.NOSTATUS):
+                    command.Parameters.AddWithValue("@orderStatus", 0); ;
+                    break;
+                case (Order.Status.ONHOLD):
+                    command.Parameters.AddWithValue("@orderStatus", 2);
+                    break;
+                case (Order.Status.INPROCESS):
+                    command.Parameters.AddWithValue("@orderStatus", 4);
+                    break;
+                case (Order.Status.CONFIRMED):
+                    command.Parameters.AddWithValue("@orderStatus", 5);
+                    break;
+                case (Order.Status.SHIPPED):
+                    command.Parameters.AddWithValue("@orderStatus", 1);
+                    break;
+                case (Order.Status.RETURNED):
+                    command.Parameters.AddWithValue("@orderStatus", 3);
+                    break;
+            }
+
+            command.Parameters.AddWithValue("@dateCompleted", order.OrderDate);
+
+            try
+            {
+                cnMain.Open();
+                
+                command.ExecuteNonQuery();
+                MessageBox.Show("Order Created Succesfully.");
+                orders.Add(order);
+            }
+            catch ( Exception ex )
+            {
+                MessageBox.Show("An error occured while trying to create order.");
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+
+
+        }
+
+        public void editOrder( Order order )
+        {
+            string query =  "UPDATE Order SET orderTotal = @orderTotal, orderStatus = @orderStatus " +
+                            "WHERE orderID = @orderID";
+
+            SqlCommand command = new SqlCommand(query, cnMain);
+
+            command.Parameters.AddWithValue("@orderID", order.OrderID);
+            command.Parameters.AddWithValue("@orderTotal", order.OrderTotal);
+            command.Parameters.AddWithValue("@orderStatus", (int) order.OrderStatus);
+
+            try
+            {
+                cnMain.Open();
+                command.ExecuteNonQuery();
+                cnMain.Close(); 
+                MessageBox.Show("Order Created Succesfully.");
+                orders.Add(order);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occured while trying to create order.");
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+
+        public int getLatestOrderID()
+        {
+            string query = "SELECT MAX( orderID ) FROM dbo.[Order]";
+            SqlCommand command = new SqlCommand(query, cnMain);
+            SqlDataReader reader;
+
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
+                int orderID = -1;
+                while (reader.Read())
+                {
+                    orderID = reader.GetInt32(0);
+                    
+                }
+
+                cnMain.Close();
+                return orderID;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return -1;
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+        }
+
+        public Order getOrderByID( int id )
+        {
+            string query = "SELECT * FROM dbo.[Order]";
+            SqlCommand command = new SqlCommand(query, cnMain);
+            SqlDataReader reader;
+            Order order = null;
+
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int orderID = reader.GetInt32(0);
+                    int customerID = reader.GetInt32(1);
+                    int clerkID = reader.GetInt16(2);
+                    double orderTotal = reader.GetSqlMoney(3).ToDouble();
+
+                    Order.Status status = Order.Status.ONHOLD;
+                    switch ( (int) reader.GetInt16(4) )
+                    {
+                        case ((int)Order.Status.NOSTATUS):
+                            status = Order.Status.NOSTATUS;
+                            break;
+                        case ((int)Order.Status.ONHOLD):
+                            status = Order.Status.ONHOLD;
+                            break;
+                        case ((int)Order.Status.INPROCESS):
+                            status = Order.Status.INPROCESS;
+                            break;
+                        case ((int)Order.Status.CONFIRMED):
+                            status = Order.Status.CONFIRMED;
+                            break;
+                        case ((int)Order.Status.SHIPPED):
+                            status = Order.Status.SHIPPED;
+                            break;
+                        case ((int)Order.Status.RETURNED):
+                            status = Order.Status.RETURNED;
+                            break;
+                    }
+                    
+
+                    Console.WriteLine("executing query");
+                    DateTime date = reader.GetDateTime(5);
+                    Console.WriteLine("executing query");
+                    order = new Order(orderID, customerID, clerkID, orderTotal, status, date);
+
+                }
+                cnMain.Close();
+
+                return order;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                cnMain.Close();
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+            return null;
         }
         #endregion
 
-        #region Get Product By Name
-        public Product getProductByName( string pname )
+        #region Product CRUD Operations
+        public Product getProductByName(string pname)
         {
             SqlDataReader reader;
             SqlCommand command;
-            string query = " SELECT * FROM " + productTbl + " WHERE productName = " + pname.Trim();
+            string query = " SELECT * FROM Product WHERE productName = " + pname.Trim();
 
             Product product = null;
             command = new SqlCommand(query, cnMain);
@@ -110,13 +306,13 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
 
                 while (reader.Read())
                 {
-                    product.ProductCode = reader.GetString(0).Trim();
+                    product.ProductCode = reader.GetInt32(0);
                     product.ProductName = reader.GetString(1).Trim();
                     product.Price = reader.GetDouble(2);
                     product.ExpiryDate = reader.GetDateTime(3);
                     product.InStockLevel = reader.GetInt16(4);
-                    //product.ProductType = reader.GetInt16(5);
-                 
+                    product.ProductType = (Product.Category) reader.GetInt16(5);
+
                 }
                 cnMain.Close();
                 return product;
@@ -129,184 +325,233 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             }
 
         }
-        #endregion
-
-        // Order methods
-
-        #region Fill Data methods
-        private void FillRow(DataRow row, Order order)
+        public void addProductsToCollection()
         {
-
-            row["orderNumber"] = order.OrderID;
-            row["orderDate"] = order.OrderDate;
-            row["requiredDate"] = order.RequiredDate;
-            row["shippedDate"] = order.ShippedDate;
-            row["status"] = order.OrderStatus;
-            row["customerID"] = order.CustomerID;
-
-        }
-
-        public void DataSetChange(Order order)
-        {
-            DataRow row = dsMain.Tables[orderTbl].NewRow();
-            FillRow(row, order);
-            dsMain.Tables[orderTbl].Rows.Add(row);
-        }
-
-        public bool UpdateDataSource(Order order)
-        {
-            bool success = true;
-
-            Create_Insert_Command(order);
-
-            success = UpdateDataSource(orderQuery, orderTbl);
-            return success;
-        }
-        #endregion
-
-        #region CRUD Operations for Order
-        public void addOrder(Order order)
-        {
-            string insert = "INSERT INTO [Order] ( orderNumber, orderDate, requiredDate, shippedDate, status, customerID ) VALUES " +
-                            "( @orderNumber, @orderDate, @requiredDate, @shippedDate, @status, @customerID)";
-
-            SqlCommand command = new SqlCommand(insert, cnMain);
-
-            command.CommandType = CommandType.Text;
-            command.CommandText = insert;
-            command.Connection = cnMain;
-
-            command.Parameters.AddWithValue("@orderNumber", order.OrderID);
-            command.Parameters.AddWithValue("@orderDate", order.OrderDate);
-            command.Parameters.AddWithValue("@requiredDate", order.RequiredDate);
-            command.Parameters.AddWithValue("@shippedDate", order.ShippedDate);
-            command.Parameters.AddWithValue("@status", order.OrderStatus);
-            command.Parameters.AddWithValue("@customerID", order.CustomerID);
-
-            try
-            {
-                cnMain.Open();
-                command.ExecuteNonQuery();
-                Console.WriteLine("Order Added Successfully");
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine("Error Generated. Details: " + ex.ToString());
-            }
-            finally
-            {
-                cnMain.Close();
-            }
-        }
-
-        public void updateOrder(Order order)
-        {
-            string updateString = "UPDATE Order SET orderDate = @orderDate, " +
-
-              "requiredDate = @requiredDate, shippedDate = @shippedDate, status = @status " 
-                +
-
-              "WHERE orderNumber = @orderNumber";
-
-            SqlCommand command = new SqlCommand(updateString, cnMain);
-
-            command.Parameters.AddWithValue("@orderNumber", order.OrderID);
-            command.Parameters.AddWithValue("@orderDate", order.OrderDate);
-            command.Parameters.AddWithValue("@requiredDate", order.RequiredDate);
-            command.Parameters.AddWithValue("@shippedDate", order.ShippedDate);
-            command.Parameters.AddWithValue("@status", order.OrderStatus);
-
-            try
-            {
-                cnMain.Open();
-                int row = command.ExecuteNonQuery();
-                Console.WriteLine("Order" + order.OrderID + "Update Sucessfully Successfully\nRow {0} affected", row);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error- Generated. Details: " + ex.ToString());
-            }
-            finally
-            {
-                cnMain.Close();
-            }
-
-        }
-        #endregion
-
-        #region Get order by OrderNumber
-        public Order getOrderByOrderNumber(int orderID)
-        {
-            /**Find Customer by ID*/
+            string query = "SELECT * FROM Product WHERE expiryDate > GETDATE()";
+            SqlCommand command = new SqlCommand( query, cnMain);
             SqlDataReader reader;
-            SqlCommand command;
-            string query = " SELECT * FROM " + orderTbl + " WHERE orderNumber = " + orderID;
-
-            Order order;
+            Product product;
 
             try
             {
-                order = new Order();
-                command = new SqlCommand(query, cnMain);
                 cnMain.Open();
                 reader = command.ExecuteReader();
+                
 
                 while (reader.Read())
                 {
-                    order.OrderID = reader.GetInt16(0);
-                    order.OrderDate = reader.GetString(1).Trim();
-                    order.RequiredDate = reader.GetString(2).Trim();
-                    order.ShippedDate = reader.GetString(3).Trim();
-                    order.OrderStatus = (Order.Status)reader.GetInt16(4);
-                    order.CustomerID = reader.GetInt16(5);
+                    product = new Product();
 
+                    product.ProductCode = reader.GetInt32(0);
+                    switch( reader.GetInt16(1) )
+                    {
+                        case ( (int) Product.Category.SOFTDRINK ):
+                            product.ProductType = Product.Category.SOFTDRINK;
+                            break;
+                        case ((int)Product.Category.BRANDED):
+                            product.ProductType = Product.Category.BRANDED;
+                            break;
+                        case ((int)Product.Category.UNSPECIFIED):
+                            product.ProductType = Product.Category.UNSPECIFIED;
+                            break;
+                        case ((int)Product.Category.UNBRANDED):
+                            product.ProductType = Product.Category.UNBRANDED;
+                            break;
+                        case ((int)Product.Category.CONFECTIONARY):
+                            product.ProductType = Product.Category.CONFECTIONARY;
+                            break;
+                        default:
+                            product.ProductType = Product.Category.UNSPECIFIED;
+                            break;
+
+                    }
+                    product.ProductName = reader.GetString(2);
+                    product.ProductDescription = reader.GetString(3);
+                    product.Price = reader.GetSqlMoney(4).ToDouble();
+                    product.InStockLevel = reader.GetInt16(5);
+                    product.ExpiryDate = reader.GetDateTime(6);
+
+                    products.Add(product);
                 }
                 cnMain.Close();
-                return order;
+            }
+            catch( Exception ex )
+            {
+                MessageBox.Show("Failed To load products " + ex.Message);
+                
+            }
+            finally
+            {
+                cnMain.Close();
+            }
+
+        }
+
+        public Collection<Product> generateExpiryReport()
+        {
+            string query = "SELECT * FROM Product WHERE expiryDate < GETDATE()";
+            SqlCommand command = new SqlCommand(query, cnMain);
+            SqlDataReader reader;
+            Product product;
+            Collection<Product> expired = new Collection<Product>();
+
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
+
+
+                while (reader.Read())
+                {
+                    product = new Product();
+
+                    product.ProductCode = reader.GetInt32(0);
+                    switch (reader.GetInt16(1))
+                    {
+                        case ((int)Product.Category.SOFTDRINK):
+                            product.ProductType = Product.Category.SOFTDRINK;
+                            break;
+                        case ((int)Product.Category.BRANDED):
+                            product.ProductType = Product.Category.BRANDED;
+                            break;
+                        case ((int)Product.Category.UNSPECIFIED):
+                            product.ProductType = Product.Category.UNSPECIFIED;
+                            break;
+                        case ((int)Product.Category.UNBRANDED):
+                            product.ProductType = Product.Category.UNBRANDED;
+                            break;
+                        case ((int)Product.Category.CONFECTIONARY):
+                            product.ProductType = Product.Category.CONFECTIONARY;
+                            break;
+                        default:
+                            product.ProductType = Product.Category.UNSPECIFIED;
+                            break;
+
+                    }
+                    product.ProductName = reader.GetString(2);
+                    product.ProductDescription = reader.GetString(3);
+                    product.Price = reader.GetSqlMoney(4).ToDouble();
+                    product.InStockLevel = reader.GetInt16(5);
+                    product.ExpiryDate = reader.GetDateTime(6);
+
+                    expired.Add(product);
+                }
+                cnMain.Close();
+
+                return expired;
             }
             catch (Exception ex)
             {
+                MessageBox.Show("Failed To generate expired Products " + ex.Message);
+            }
+            finally
+            {
+                cnMain.Close(); 
+            }
+            return expired;
+
+        }
+
+        public Product getProductByCode( int id )
+        {
+            string query = "SELECT * FROM Product WHERE productCode = @productCode";
+            SqlCommand command = new SqlCommand( query, cnMain );
+
+            Product product = null;
+            try
+            {
+                cnMain.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                
+                while ( reader.Read() )
+                {
+                    product = new Product();
+
+                    product.ProductCode = reader.GetInt32(0);
+                    product.ProductType = (Product.Category)reader.GetInt16(1);
+                    product.ProductName = reader.GetString(2);
+                    product.ProductDescription = reader.GetString(3);
+                    product.Price= reader.GetSqlMoney(4).ToDouble();
+                    product.InStockLevel= reader.GetInt16(5);
+                    product.ExpiryDate = reader.GetDateTime(6);
+                }
+
                 cnMain.Close();
-                MessageBox.Show("Cannot find order with orderNumber: " + orderID + "\n" + ex.ToString());
+                return product;
+            }
+            catch ( Exception ex )
+            {
+                MessageBox.Show("Failed to get product with id {0}.", id.ToString() );
+                Console.WriteLine(ex.Message);
+                cnMain.Close();
                 return null;
             }
-
+            return null;
         }
         #endregion
 
-        #region Parameters
-        private void Build_Insert_Parameters(Order order)
+        #region OrderItem CRUD Operations
+        public Collection<OrderItem> getOrderItemsByOrderID( int id )
         {
-            SqlParameter parameter = default(SqlParameter);
-            parameter = new SqlParameter("@orderNumber", SqlDbType.Int, 8, "orderNumber");
-            daMain.InsertCommand.Parameters.Add(parameter);
+            string query = "SELECT * FROM OrderItem WHERE orderID = @orderID";
+            SqlCommand command = new SqlCommand(query, cnMain );
+            command.Parameters.AddWithValue("orderID", id);
+            SqlDataReader reader;
+            OrderItem item;
+            Collection<OrderItem> items = new Collection<OrderItem>();
 
+            try
+            {
+                cnMain.Open();
+                reader = command.ExecuteReader();
 
-            parameter = new SqlParameter("@orderDate", SqlDbType.VarChar, 50, "orderDate");
-            daMain.InsertCommand.Parameters.Add(parameter);
+                while ( reader.Read() )
+                {
+                    Order order = getOrderByID(reader.GetInt32(0));
+                    Product product = getProductByCode( reader.GetInt32(1));
+                    int quantity = reader.GetInt32(2);
 
-            parameter = new SqlParameter("@requiredDate", SqlDbType.VarChar, 50, "requiredDate");
-            daMain.InsertCommand.Parameters.Add(parameter);
+                    item = new OrderItem(order, product, quantity);
 
-            parameter = new SqlParameter("@shippedDate", SqlDbType.VarChar, 50, "shippedDate");
-            daMain.InsertCommand.Parameters.Add(parameter);
-
-            parameter = new SqlParameter("@status", SqlDbType.Int, 1, "status");
-            daMain.InsertCommand.Parameters.Add(parameter);
-
-            parameter = new SqlParameter("@customerID", SqlDbType.Int, 8, "customerID");
-            daMain.InsertCommand.Parameters.Add(parameter);
+                    items.Add(item);
+                }
+                cnMain.Close();
+                return items;
+            }
+            catch ( Exception ex )
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                cnMain.Close();
+            }
+            return items;
         }
 
-        private void Create_Insert_Command(Order order)
+        public void AddOrderItems( Collection<OrderItem> items )
         {
-            string insert = "INSERT INTO Order ( orderNumber, orderDate, requiredDate, shippedDate, status, customerID ) ";
-            string values = "VALUES ( @orderNumber, @orderDate, @requiredDate, @shippedDate, @status, @customerID ) ";
-            string insertCommand = insert + values;
+            string query = "INSERT INTO OrderItem ( orderID, productCode, quantity, itemTotal ) " +
+                            "VALUES ( @orderID, @productCode, @quantity, @itemTotal )";
+            
+            try
+            {
 
-            daMain.InsertCommand = new SqlCommand(insertCommand, cnMain);
+                foreach( OrderItem item in items )
+                {
+                    SqlCommand command = new SqlCommand(query, cnMain);
+                    command.Parameters.AddWithValue("@orderID", item.OrderID);
+                    command.Parameters.AddWithValue("@productCode", item.ProductCode);
+                    command.Parameters.AddWithValue("@quantity", item.Quantity);
+                    command.Parameters.AddWithValue("@itemTotal", item.SubTotal);
 
-            Build_Insert_Parameters(order);
+                    cnMain.Open();
+                    command.ExecuteNonQuery();
+                    cnMain.Close();
+                }
+            }
+            catch( Exception ex)
+            {
+                Console.WriteLine("Failed to add order items");
+                cnMain.Close();
+            }
         }
         #endregion
 

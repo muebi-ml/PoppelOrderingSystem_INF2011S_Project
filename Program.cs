@@ -20,15 +20,20 @@ namespace PoppelOrderingSystem_INF2011S_Project
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+<<<<<<< HEAD
             Application.Run(new OrderParentForm()); // form test run
 /*
 <<<<<<< HEAD
 =======
+=======
+            //Application.Run(new Form1());
+
+>>>>>>> e4fecefbf2141cf2c9cb477481c83e1a12a083d0
 
             /*CustomerDB db = new CustomerDB();
             
             
->>>>>>> karabo-code
+
 
             CustomerDB customerDB = new CustomerDB();
 
@@ -38,8 +43,7 @@ namespace PoppelOrderingSystem_INF2011S_Project
 
             Console.WriteLine(customerDB.getAccountWithID(customer));
 
-<<<<<<< HEAD
-=======
+
             Console.WriteLine("test if update works");
             Customer customer2 = new Customer("990404", "Mukhethwa", "Muebi", "0608055010", "muebiml1999@gmail.com", 5, 4);
             customer2.AccountID = 3;
@@ -63,7 +67,11 @@ namespace PoppelOrderingSystem_INF2011S_Project
             Console.WriteLine(order.getOrderByOrderNumber(10200));
 
             
+<<<<<<< HEAD
 >>>>>>> karabo-code **/
+=======
+
+>>>>>>> e4fecefbf2141cf2c9cb477481c83e1a12a083d0
         }
     }
 }

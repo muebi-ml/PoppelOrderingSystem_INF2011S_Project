@@ -9,11 +9,15 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
     public class MarkettingClerk
     {
         #region Attributes
-        private string clerkID;
+        private int clerkID;
         #endregion
 
+        public MarkettingClerk( int clerkID )
+        {
+            this.clerkID = clerkID;
+        }
         #region Property Methods
-        public string ClerkID
+        public int ClerkID
         {
             get { return clerkID; }
         }

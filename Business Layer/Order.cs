@@ -13,25 +13,26 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #region Order status
         public enum Status
         {
-            No_Status = 0,
-            Shipped = 1,
-            On_Hold = 2,
-            Returned = 3,
-            In_Process = 4,
-            Confirmed = 5
+            NOSTATUS = 0,
+            SHIPPED = 1,
+            ONHOLD = 2,
+            RETURNED = 3,
+            INPROCESS = 4,
+            CONFIRMED = 5
         }
         #endregion
 
         #region Attributes
         // order table attributes
         private int orderID;
-        private string orderDate;
-        private string requiredDate;
-        private string shippedDate;
+        private DateTime orderDate;
+        private DateTime deliveryDate;
+        private DateTime shippedDate;
         private Status status;
         private int customerID;
-
-
+        private int clerkID;
+        private int pickingListID;
+        private int deliveryID;
 
         private string orderName;
         private Customer customer;
@@ -45,7 +46,6 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         private double discount, orderTotal;
         #endregion
 
-
         #region Constructors
         public Order ( int orderID, Customer customer, MarkettingClerk clerk)
         {
@@ -54,49 +54,64 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             this.clerk = clerk;
             this.discount = 0;
             this.orderTotal = 0;
+            this.deliveryID = 0;
+            this.pickingListID = 0;
         }
 
-        public Order( int orderID, string orderDate, string requiredDate, string shippedDate, Status status, int customerID)
+        public Order( int orderID, int customerID, int clerkID, double orderTotal, Status status, DateTime orderDate) 
         {
             this.orderID = orderID;
-            this.orderDate = orderDate;
-            this.requiredDate = requiredDate;
-            this.shippedDate = shippedDate;
-            this.status = Status.No_Status;
             this.customerID = customerID;
+            this.clerkID = clerkID;
+            this.orderTotal = orderTotal;
+            this.orderDate = orderDate;
+            this.status = status;
+          
+        }
+
+        public Order(int customerID, int clerkID, double orderTotal, Status status, DateTime orderDate )
+        {
+            this.orderID = 0;
+            this.customerID = customerID;
+            this.clerkID = clerkID;
+            this.orderTotal = orderTotal;
+            this.orderDate = orderDate;
+
         }
 
         public Order()
         {
-            this.orderID = 0;
-            this.orderDate = "";
-            this.requiredDate = "";
-            this.shippedDate = "";
-            this.status = Status.No_Status;
-            this.customerID = 0;
+            clerkID=0;
+            orderTotal=0;
         }
+
         #endregion
 
         #region Property Methods
+        public int PickingListID
+        {
+            get { return pickingListID; }
+            set { pickingListID = value; }
+        }
         public int OrderID
         {
             get { return orderID; }
             set { this.OrderID = value; }
         }
 
-        public string OrderDate
+        public DateTime OrderDate
         {
             set { orderDate = value; }
             get { return orderDate; }
         }
 
-        public string RequiredDate
+        public DateTime DeliveryDate
         {
-            set { requiredDate = value; }
-            get { return requiredDate; }
+            set { deliveryDate = value; }
+            get { return deliveryDate; }
         }
 
-        public string ShippedDate
+        public DateTime ShippedDate
         {
             set { shippedDate = value; }
             get { return shippedDate; }
@@ -124,12 +139,25 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         {
             get { return orderTotal; }
         }
+
+        public int ClerkID
+        {
+            get { return clerkID; }
+            set { clerkID = value; }
+        }
         #endregion
 
         #region To String
         public override string ToString()
         {
-            return "Order Number: " + this.orderID + "\nOrder Date: " + this.orderDate + "\nRequired Date: " + this.requiredDate + "\nShipped Date: " + this.shippedDate + "\nStatus: " + this.status + "\nCustomer ID " + this.customerID;
+            return  "Order Number: " + this.orderID +
+                    "\nCustomer ID " + this.customerID +
+                    "\nProcessed By Clerk: " + this.clerkID +
+                    "\nOrder Date: " + this.orderDate + 
+                    "\nOrder Total: " + this.orderTotal +
+                    "\nRequired Date: " + this.deliveryDate + 
+                    "\nShipped Date: " + this.shippedDate + 
+                    "\nStatus: " + this.status ;
         }
         #endregion
     }

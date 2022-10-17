@@ -70,6 +70,8 @@
     <Compile Include="Business Layer\Invoice.cs" />
     <Compile Include="Business Layer\MarkettingClerk.cs" />
     <Compile Include="Business Layer\Order.cs" />
+    <Compile Include="Business Layer\OrderController.cs" />
+    <Compile Include="Business Layer\OrderItem.cs" />
     <Compile Include="Business Layer\Payment.cs" />
     <Compile Include="Business Layer\Person.cs" />
     <Compile Include="Business Layer\PickingList.cs" />
