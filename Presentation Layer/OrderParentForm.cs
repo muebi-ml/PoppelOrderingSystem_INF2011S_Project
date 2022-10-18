@@ -16,12 +16,29 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
         private int childFormNumber = 0;
         private OrderController OrderController;
         private CustomerController CustomerController;
+        private MarkettingClerk clerk;
 
         public OrderParentForm()
         {
             InitializeComponent();
             OrderController = new OrderController();
             CustomerController = new CustomerController();
+
+            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm(false, false);
+            customerDetailsForm.continueButton.Click += new EventHandler( this.continueButton_Click );
+
+            //frmChild.btnClickMeToo.Click += new
+            //EventHandler(frmMain.btnClickMe_Click);
+
+            Customer c = CustomerDetailsForm.globalCustomer;
+        }
+
+        public OrderParentForm(MarkettingClerk clerk)
+        {
+            this.clerk = clerk;
+            OrderController = new OrderController();
+            CustomerController = new CustomerController();
+            InitializeComponent();
         }
 
         private void ShowNewForm(object sender, EventArgs e)
@@ -53,6 +70,27 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
                 string FileName = saveFileDialog.FileName;
             }
         }
+
+
+        private void continueButton_Click( object sender , EventArgs e )
+        {
+            MessageBox.Show("Yaya");
+            Console.WriteLine("Hello");
+        }
+
+
+        #region On Click Events 
+        
+        #endregion
+
+
+
+
+
+
+
+
+
 
         private void ExitToolsStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -112,7 +150,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
         private void createNewOrderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // after clicking "Create new order" strip display CreateAnOrder form
-            CreateAnOrder orderform = new CreateAnOrder();
+            CreateAnOrder orderform = new CreateAnOrder(false);
             orderform.Show();
            
             

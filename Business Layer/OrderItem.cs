@@ -15,6 +15,10 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         private double subTotal;
         private int orderID;
         private int productCode;
+
+        public OrderItem()
+        {
+        }
         #endregion
 
         #region Constructor 
@@ -30,19 +34,37 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         #endregion
 
         #region Property Methods 
-        public Product Product { get { return product; } }
+        public Product Product { 
+            get { return product; } 
+            set { product = value; }
+        }
         public Order Order { get { return order; } }
-        public int Quantity { get { return quantity; } }
-        public double SubTotal { get { return subTotal; } }
+        public int Quantity { 
+            get { return quantity; } 
+            set { quantity = value; }   
+        
+        }
+        public double SubTotal { 
+            get 
+            {
+                return (double) quantity * Product.Price;
+            }
+            
+        }
 
         public int OrderID
         {
             get { return orderID; }
+            set { orderID = value; }    
         }
 
         public int ProductCode
         {
             get { return productCode;  }
+            set
+            {
+                productCode = value;
+            }   
         }
         #endregion
 
@@ -51,8 +73,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         {
             return "Product Code: " + productCode +
                     "\nOrder ID: " + orderID +
-                    "\nQuantity: " + quantity + 
-                    "Sub Total: " + subTotal;
+                    "\nQuantity: " + quantity;
         }
         #endregion
     }

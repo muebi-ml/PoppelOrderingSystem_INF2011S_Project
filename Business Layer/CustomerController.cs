@@ -72,5 +72,13 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             get { return customers; }   
         }
         #endregion
+
+        #region Address Crud 
+
+        public Address getAddressByID(int id )
+        {
+            return customerDB.getAddressWithID(id);
+        }
+        #endregion
     }
 }
