@@ -44,7 +44,13 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
             set { quantity = value; }   
         
         }
-        public double SubTotal { get { return subTotal; } }
+        public double SubTotal { 
+            get 
+            {
+                return (double) quantity * Product.Price;
+            }
+            
+        }
 
         public int OrderID
         {

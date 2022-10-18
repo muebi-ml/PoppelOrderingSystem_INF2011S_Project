@@ -16,6 +16,8 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         private Collection<OrderItem> orderItems;
         private Collection<Product> orderProducts;
         private Collection<int> quantities;
+
+        private double currentOrderTotal;
         #endregion
 
         #region Constructors
@@ -101,6 +103,47 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         }
         #endregion
 
+        public int createOrder(Customer customer, MarkettingClerk clerk, Collection<OrderItem> myOrderItems, double orderTotal)
+        {
+            Order order = new Order();
+            int orderID;
+            order.ClerkID = clerk.ClerkID;
+            order.CustomerID = customer.CustomerID;
+            order.OrderDate = DateTime.Now;
+            order.OrderTotal = orderTotal;
+
+
+            orderDB.createOrder(order);
+            orderID = orderDB.getLatestOrderID();
+
+            order = orderDB.getOrderByID(orderID);
+
+            Console.WriteLine(order.ToString());
+
+            CreateOrderItems(order);
+
+            AddOrderItemsToDB(myOrderItems, order );
+
+            return orderID;
+
+        }
+
+        private void AddOrderItemsToDB(Collection<OrderItem> items, Order order )
+        {
+            foreach( OrderItem item in items )
+            {
+                item.OrderID = order.OrderID;
+            }
+
+            orderDB.AddOrderItems(items);
+
+        }
+
+        public Order GetOrderByID( int id )
+        {
+            return orderDB.getOrderByID(id);
+        }
+
         #region CRUD Picking list
         public Collection<OrderItem> GeneratePickingList( int orderID )
         {
@@ -112,6 +155,18 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         public Collection<Product> GenerateExpiredProducts()
         {
             return orderDB.GenerateExpiryReport();
+        }
+        #endregion
+
+        #region CRUD Products
+        public Collection<Product> GetProduucts()
+        {
+            return orderDB.Products;
+        }
+
+        public Product GetProductByID(int id)
+        {
+            return orderDB.getProductByCode(id);
         }
         #endregion
     }
