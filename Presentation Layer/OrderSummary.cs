@@ -39,12 +39,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
             orderIDTextBox.Enabled = false;
             completedByTextBox.Enabled = false;
             dateTextBox.Enabled = false;
-            
+            orderTotalTextBox.Enabled = false;
             streetNameTextBox.Enabled = false;
             townTextBox.Enabled = false;
             cityTextBox.Enabled = false;
             postalCodeTextBox.Enabled = false;
-            deliverByDate.Enabled = false;
+            deliverByTextBox.Enabled = false;
         }
         private void ShowSummary()
         {
@@ -53,6 +53,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
             completedByTextBox.Text = clerk.FirstName + " " + clerk.LastName;
             dateTextBox.Text = order.OrderDate.ToShortDateString();
             streetNameTextBox.Text = address.StreetName;
+            orderTotalTextBox.Text = order.OrderTotal.ToString();
             townTextBox.Text = address.Town;
             cityTextBox.Text = address.City;
             postalCodeTextBox.Text = address.PostalCode.ToString();

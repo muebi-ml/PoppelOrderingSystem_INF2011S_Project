@@ -110,7 +110,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
                 for (int i = 0; i < count; i++ )
                 {
-                    productListView.Items.RemoveAt(i);
+                    orderListView.Items.RemoveAt(i);
                 }
                 
             }else
@@ -469,12 +469,16 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
         private void addToCartButton_Click(object sender, EventArgs e)
         {
-            
+            int quantity = 0;
             if ( quantityTextBox.Text.Length < 1 )
             {
                 MessageBox.Show("Please enter quantity before adding product to cart.");
             }
-            int quantity = int.Parse(quantityTextBox.Text.TrimStart(new char[] { '0' }));
+            else
+            {
+                quantity = int.Parse(quantityTextBox.Text.TrimStart(new char[] { '0' }));
+            }
+            
             if ( currentProduct.InStockLevel < quantity )
             {
                 MessageBox.Show("Quantity cannot exceed the number of available units.");
