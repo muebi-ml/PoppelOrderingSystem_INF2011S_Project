@@ -538,7 +538,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
                 {
                     SqlCommand command = new SqlCommand(query, cnMain);
                     command.Parameters.AddWithValue("@orderID", item.OrderID);
-                    command.Parameters.AddWithValue("@productCode", item.ProductCode);
+                    command.Parameters.AddWithValue("@productCode", item.Product.ProductCode);
                     command.Parameters.AddWithValue("@quantity", item.Quantity);
                     command.Parameters.AddWithValue("@itemTotal", item.SubTotal);
 
@@ -550,6 +550,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             catch( Exception ex)
             {
                 Console.WriteLine("Failed to add order items");
+                MessageBox.Show(ex.ToString());
                 cnMain.Close();
             }
         }
