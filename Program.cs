@@ -20,14 +20,8 @@ namespace PoppelOrderingSystem_INF2011S_Project
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            // Application.Run(new OrderParentForm());
-           
-            OrderController orderController = new OrderController();
+            Application.Run(new MainOrderingForm() );
             
-            foreach ( Product item in orderController.GenerateExpiredProducts())
-            {
-                Console.WriteLine(item);
-            }
         }
     }
 }
