@@ -83,6 +83,9 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         {
             clerkID=0;
             orderTotal=0;
+            OrderStatus = Status.CONFIRMED;
+            orderDate = DateTime.Now;
+            orderTotal = 0;
         }
 
         #endregion
@@ -138,6 +141,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Business_Layer
         public double OrderTotal
         {
             get { return orderTotal; }
+            set { orderTotal = value; }
         }
 
         public int ClerkID

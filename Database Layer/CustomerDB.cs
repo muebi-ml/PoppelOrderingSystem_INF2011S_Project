@@ -625,7 +625,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Database_Layer
             }
         }
 
-        private Address getAddressWithID( int id )
+        public Address getAddressWithID( int id )
         {
             string query = "SELECT * FROM Address WHERE addressID = @addressID";
             SqlCommand command = new SqlCommand(query, cnMain);

@@ -76,9 +76,11 @@
     <Compile Include="Business Layer\Person.cs" />
     <Compile Include="Business Layer\PickingList.cs" />
     <Compile Include="Business Layer\Product.cs" />
+    <Compile Include="Business Layer\UserController.cs" />
     <Compile Include="Database Layer\CustomerDB.cs" />
     <Compile Include="Database Layer\Database.cs" />
     <Compile Include="Database Layer\OrderDB.cs" />
+    <Compile Include="Database Layer\UsersDB.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +104,30 @@
     <Compile Include="Presentation Layer\AccountDetailsForm.Designer.cs">
       <DependentUpon>AccountDetailsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentation Layer\GenerateExpiryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\GenerateExpiryForm.Designer.cs">
+      <DependentUpon>GenerateExpiryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation Layer\GeneratePickingListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\GeneratePickingListForm.Designer.cs">
+      <DependentUpon>GeneratePickingListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation Layer\MainLoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\MainLoginForm.Designer.cs">
+      <DependentUpon>MainLoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation Layer\MainOrderingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\MainOrderingForm.Designer.cs">
+      <DependentUpon>MainOrderingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentation Layer\OrderParentForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +137,12 @@
     <Compile Include="Presentation Layer\CreateAnOrder.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Presentation Layer\OrderSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation Layer\OrderSummary.Designer.cs">
+      <DependentUpon>OrderSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Presentation Layer\AccountDetailsForm.resx">
@@ -119,11 +151,26 @@
     <EmbeddedResource Include="Presentation Layer\CustomerDetailsForm.resx">
       <DependentUpon>CustomerDetailsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\GenerateExpiryForm.resx">
+      <DependentUpon>GenerateExpiryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\GeneratePickingListForm.resx">
+      <DependentUpon>GeneratePickingListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\MainLoginForm.resx">
+      <DependentUpon>MainLoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\MainOrderingForm.resx">
+      <DependentUpon>MainOrderingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentation Layer\OrderParentForm.resx">
       <DependentUpon>OrderParentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation Layer\CreateAnOrder.resx">
       <DependentUpon>CreateAnOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation Layer\OrderSummary.resx">
+      <DependentUpon>OrderSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

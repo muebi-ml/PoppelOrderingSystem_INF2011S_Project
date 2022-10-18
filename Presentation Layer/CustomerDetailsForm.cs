@@ -15,15 +15,18 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
     {
 
         #region Data members
-        private Customer customer;
+        public static Customer globalCustomer = new Customer();
         private CustomerController customerController;
         private bool isNew;
+        private bool isCreatingNewOrder;
+        private Customer customer;
         #endregion
 
         #region Constructor
-        public CustomerDetailsForm(bool isNew )
+        public CustomerDetailsForm(bool isNew, bool isCreatingNewOrder )
         {
             this.isNew = isNew;
+            this.isCreatingNewOrder = isCreatingNewOrder;
             InitializeComponent();
             customerController = new CustomerController();
             ShowLabels(this.isNew); // hide labels
@@ -31,13 +34,19 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
             ShowSubmitButton(isFormCompleted());
             ShowCustomerID();
         }
-
         #endregion
 
+        
         private void ShowCustomerID()
         {
             customerIDTextBox.Visible = !this.isNew;
             customerIDLabel.Visible = !this.isNew;
+        }
+
+        private void ShowCustomerID( bool show )
+        {
+            customerIDTextBox.Visible = show;
+            customerIDLabel.Visible = show;
         }
 
         private void showSubmitExistingCustomerForm()
@@ -58,6 +67,44 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
         }
 
+        private void DisplayCustomer( Customer cust )
+        {
+            customerIDTextBox.Text = cust.CustomerID.ToString();
+            firstNameTextBox.Text = cust.FirstName;
+            lastNameTextBox.Text = cust.LastName;
+            customerIDTextBox.Enabled = false;
+            firstNameTextBox.Enabled = false;
+            lastNameTextBox.Enabled = false;
+            
+            if ( cust.Phone.Length > 10 )
+            {
+                string phone = cust.Phone;
+                phone = phone.TrimStart(new char[] { '+', '2', '7' });
+                phoneNumberTextBox.Text = "0"+phone;
+            }
+            else
+            {
+                phoneNumberTextBox.Text = cust.Phone;
+            }
+            phoneNumberTextBox.Enabled = false;
+            emailTextBox.Text = cust.Email;
+            streetNameTextBox.Text = cust.Address.StreetName;
+            townTextBox.Text = cust.Address.Town;
+            cityTextBox.Text = cust.Address.City;
+            postalCodeTextBox.Text = cust.Address.PostalCode.ToString();
+
+            emailTextBox.Enabled = false;
+            streetNameTextBox.Enabled = false;
+            townTextBox.Enabled = false;
+            cityTextBox.Enabled = false;
+            postalCodeTextBox.Enabled = false;
+
+            ShowTextBoxes(true);
+            ShowCustomerID(true);
+            ShowLabels(true);
+
+        }
+
         private void submitButton_Click(object sender, EventArgs e)
         {
 
@@ -71,26 +118,33 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
                 string town = townTextBox.Text.Trim();
                 string city = cityTextBox.Text.Trim();
                 int code = int.Parse( postalCodeTextBox.Text.Trim().TrimStart(new char[] {'0'} ) );
-                Customer customer = new Customer(firstName, lastName, phone, email);
+                customer = new Customer(firstName, lastName, phone, email);
                 Address address = new Address(street, town, city, code);
                 Account account = new Account();
                 account.AccountName = firstName;
 
-                customerController.CreateCustomer(customer, account, address);
+                int customerID = customerController.CreateCustomer(customer, account, address);
+                customer = customerController.FindCustomerByID(customerID);
+                globalCustomer = customer;
+                DisplayCustomer(customer);
+                submitButton.Enabled = false;
+                enterDetailsLabel.Text = "Showing Customer Details";
 
 
-                //MessageBox.Show("Customer details successfully submitted!");
             }
             else
             {
                 int customerID = int.Parse(customerIDTextBox.Text.Trim().TrimStart(new char[] { '0' }));
                 if ( customerController.DoesCustomerExist(customerID))
                 {
-                    Customer customer;
+                    Customer cust;
 
-                    customer = customerController.FindCustomerByID(customerID);
-                    MessageBox.Show(customer.ToString());
-                    
+                    cust = customerController.FindCustomerByID(customerID);
+                    DisplayCustomer(cust);
+                    submitButton.Enabled = false;
+                    customer = cust;
+                    //MessageBox.Show(customer.ToString());
+
                 }
                 else
                 {
@@ -98,22 +152,25 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
                 }
                 
             }
-            /* after adding customer details click submit to submit data into the database */
-            PopulateCustomer(customer);
-            
-            customerController.UpdataCustomerDatabase(customer, 0); // DatabaseOperation state is to create a customer therefore CREATE = 0
-            ClearAllCustomerTextboxes();
-            ShowLabels(false); // hide labels
-            ShowTextBoxes(false); // hide text boxes
 
         }
 
         private void continueButton_Click(object sender, EventArgs e)
         {
-            /* after clicking the submit button click continue to open account details form */
-            AccountDetailsForm accountDetails = new AccountDetailsForm();
-            accountDetails.Show();
 
+            if ( isCreatingNewOrder )
+            {
+                MainOrderingForm mainOrderingForm = new MainOrderingForm();
+
+                mainOrderingForm.PassBackCustomer( customer );
+                Console.WriteLine(customer.ToString());
+                this.Close();
+            }
+
+            else
+            {
+                this.Close();
+            }
         }
         private void customerIDTextBox_KeyPress ( object sender, KeyPressEventArgs e )
         {
@@ -253,7 +310,6 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
         private void ShowLabels(bool value)
         {
             enterDetailsLabel.Visible = value;
-            
             firstNameLabel.Visible = value;
             lastNameLabel.Visible = value;
             phoneNumberLabel.Visible = value;
@@ -314,7 +370,24 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
         private void cancelButton_Click_1(object sender, EventArgs e)
         {
-
+            if ( isCreatingNewOrder )
+            {
+                DialogResult result = MessageBox.Show("Do you wish to cancel this operation", "?", MessageBoxButtons.YesNo );
+                if ( result == DialogResult.Yes)
+                {
+                    this.Close();
+                }
+            }
+            else
+            {
+                
+                DialogResult result = MessageBox.Show("Do you wish to cancel this operation", "?", MessageBoxButtons.YesNo );
+                if (result == DialogResult.Yes)
+                {
+                    this.Close();
+                }
+            }
+            this.Close();
         }
     }
 }
