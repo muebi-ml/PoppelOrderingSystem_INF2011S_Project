@@ -16,10 +16,12 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
     {
         private System.Windows.Forms.Button newCustomerOption;
         private System.Windows.Forms.Button existingCustomerButton;
+        private bool isCreatingOrder;
 
-        public CreateAnOrder()
+        public CreateAnOrder(bool isCreatingOrder)
         {
             InitializeComponent();
+            this.isCreatingOrder = isCreatingOrder;
         }
 
         private void InitializeComponent()
@@ -30,27 +32,29 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
             // 
             // existingCustomerButton
             // 
+            this.existingCustomerButton.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.existingCustomerButton.Location = new System.Drawing.Point(231, 30);
             this.existingCustomerButton.Name = "existingCustomerButton";
             this.existingCustomerButton.Size = new System.Drawing.Size(99, 133);
             this.existingCustomerButton.TabIndex = 1;
             this.existingCustomerButton.Text = "Existing Customer";
-            this.existingCustomerButton.UseVisualStyleBackColor = true;
+            this.existingCustomerButton.UseVisualStyleBackColor = false;
             this.existingCustomerButton.Click += new System.EventHandler(this.existingCustomerButton_Click);
             // 
             // newCustomerOption
             // 
+            this.newCustomerOption.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.newCustomerOption.Location = new System.Drawing.Point(86, 30);
             this.newCustomerOption.Name = "newCustomerOption";
             this.newCustomerOption.Size = new System.Drawing.Size(99, 133);
             this.newCustomerOption.TabIndex = 2;
             this.newCustomerOption.Text = "New Customer";
-            this.newCustomerOption.UseVisualStyleBackColor = true;
+            this.newCustomerOption.UseVisualStyleBackColor = false;
             this.newCustomerOption.Click += new System.EventHandler(this.newCustomerOption_Click);
             // 
             // CreateAnOrder
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.BackColor = System.Drawing.Color.SeaGreen;
             this.ClientSize = new System.Drawing.Size(420, 240);
             this.Controls.Add(this.newCustomerOption);
             this.Controls.Add(this.existingCustomerButton);
@@ -68,16 +72,17 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
         private void existingCustomerButton_Click(object sender, EventArgs e)
         {
-            // after choosing "Existing Customer" option open CustomerDetailsForm
-            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm(false);
+            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm(false, isCreatingOrder);
             customerDetailsForm.Show();
+            this.Hide();
         }
 
         private void newCustomerOption_Click(object sender, EventArgs e)
         {
             // after choosing "New Customer" option open CustomerDetailsForm
-            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm(true);
+            CustomerDetailsForm customerDetailsForm = new CustomerDetailsForm(true,isCreatingOrder);
             customerDetailsForm.Show();
+            this.Hide();
 
         }
     }

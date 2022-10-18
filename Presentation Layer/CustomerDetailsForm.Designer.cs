@@ -123,7 +123,7 @@
             // 
             this.firstNameTextBox.Location = new System.Drawing.Point(237, 105);
             this.firstNameTextBox.Name = "firstNameTextBox";
-            this.firstNameTextBox.Size = new System.Drawing.Size(197, 20);
+            this.firstNameTextBox.Size = new System.Drawing.Size(321, 20);
             this.firstNameTextBox.TabIndex = 8;
             this.firstNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.firstNameTextBox_KeyPress);
             // 
@@ -131,7 +131,7 @@
             // 
             this.lastNameTextBox.Location = new System.Drawing.Point(237, 136);
             this.lastNameTextBox.Name = "lastNameTextBox";
-            this.lastNameTextBox.Size = new System.Drawing.Size(197, 20);
+            this.lastNameTextBox.Size = new System.Drawing.Size(321, 20);
             this.lastNameTextBox.TabIndex = 9;
             this.lastNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.lastNameTextBox_KeyPress);
             // 
@@ -140,7 +140,7 @@
             this.phoneNumberTextBox.Location = new System.Drawing.Point(237, 167);
             this.phoneNumberTextBox.MaxLength = 10;
             this.phoneNumberTextBox.Name = "phoneNumberTextBox";
-            this.phoneNumberTextBox.Size = new System.Drawing.Size(197, 20);
+            this.phoneNumberTextBox.Size = new System.Drawing.Size(321, 20);
             this.phoneNumberTextBox.TabIndex = 10;
             this.phoneNumberTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.phoneNumberTextBox_KeyPress);
             // 
@@ -149,7 +149,7 @@
             this.customerIDTextBox.Location = new System.Drawing.Point(237, 72);
             this.customerIDTextBox.MaxLength = 7;
             this.customerIDTextBox.Name = "customerIDTextBox";
-            this.customerIDTextBox.Size = new System.Drawing.Size(197, 20);
+            this.customerIDTextBox.Size = new System.Drawing.Size(321, 20);
             this.customerIDTextBox.TabIndex = 11;
             this.customerIDTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.customerIDTextBox_KeyPress);
             // 
@@ -157,7 +157,7 @@
             // 
             this.emailTextBox.Location = new System.Drawing.Point(237, 199);
             this.emailTextBox.Name = "emailTextBox";
-            this.emailTextBox.Size = new System.Drawing.Size(197, 20);
+            this.emailTextBox.Size = new System.Drawing.Size(321, 20);
             this.emailTextBox.TabIndex = 12;
             this.emailTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.emailTextBox_KeyPress);
             // 
@@ -165,7 +165,7 @@
             // 
             this.streetNameTextBox.Location = new System.Drawing.Point(237, 232);
             this.streetNameTextBox.Name = "streetNameTextBox";
-            this.streetNameTextBox.Size = new System.Drawing.Size(197, 20);
+            this.streetNameTextBox.Size = new System.Drawing.Size(321, 20);
             this.streetNameTextBox.TabIndex = 13;
             this.streetNameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.streetNameTextBox_KeyPress);
             // 
@@ -173,7 +173,7 @@
             // 
             this.townTextBox.Location = new System.Drawing.Point(237, 258);
             this.townTextBox.Name = "townTextBox";
-            this.townTextBox.Size = new System.Drawing.Size(197, 20);
+            this.townTextBox.Size = new System.Drawing.Size(321, 20);
             this.townTextBox.TabIndex = 14;
             this.townTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.townTextBox_KeyPress);
             // 
@@ -181,7 +181,7 @@
             // 
             this.cityTextBox.Location = new System.Drawing.Point(237, 285);
             this.cityTextBox.Name = "cityTextBox";
-            this.cityTextBox.Size = new System.Drawing.Size(197, 20);
+            this.cityTextBox.Size = new System.Drawing.Size(321, 20);
             this.cityTextBox.TabIndex = 15;
             this.cityTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cityTextBox_KeyPress);
             // 
@@ -189,13 +189,13 @@
             // 
             this.postalCodeTextBox.Location = new System.Drawing.Point(237, 312);
             this.postalCodeTextBox.Name = "postalCodeTextBox";
-            this.postalCodeTextBox.Size = new System.Drawing.Size(197, 20);
+            this.postalCodeTextBox.Size = new System.Drawing.Size(321, 20);
             this.postalCodeTextBox.TabIndex = 16;
             this.postalCodeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.postalCodeTextBox_KeyPress);
             // 
             // continueButton
             // 
-            this.continueButton.Location = new System.Drawing.Point(279, 395);
+            this.continueButton.Location = new System.Drawing.Point(237, 395);
             this.continueButton.Name = "continueButton";
             this.continueButton.Size = new System.Drawing.Size(132, 27);
             this.continueButton.TabIndex = 19;
@@ -205,7 +205,7 @@
             // 
             // submitButton
             // 
-            this.submitButton.Location = new System.Drawing.Point(362, 353);
+            this.submitButton.Location = new System.Drawing.Point(311, 353);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(123, 26);
             this.submitButton.TabIndex = 20;
@@ -215,7 +215,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(214, 353);
+            this.cancelButton.Location = new System.Drawing.Point(163, 353);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(117, 26);
             this.cancelButton.TabIndex = 21;
@@ -227,6 +227,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.SeaGreen;
             this.ClientSize = new System.Drawing.Size(609, 434);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.submitButton);
@@ -248,6 +249,7 @@
             this.Controls.Add(this.customerIDLabel);
             this.Controls.Add(this.enterDetailsLabel);
             this.Name = "CustomerDetailsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = " ";
             this.Load += new System.EventHandler(this.CustomerDetailsForm_Load);
             this.ResumeLayout(false);
@@ -273,8 +275,8 @@
         private System.Windows.Forms.TextBox townTextBox;
         private System.Windows.Forms.TextBox cityTextBox;
         private System.Windows.Forms.TextBox postalCodeTextBox;
-        private System.Windows.Forms.Button continueButton;
         private System.Windows.Forms.Button submitButton;
         private System.Windows.Forms.Button cancelButton;
+        public System.Windows.Forms.Button continueButton;
     }
 }

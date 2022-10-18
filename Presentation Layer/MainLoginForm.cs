@@ -15,6 +15,7 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
     {
         private UserController userController;
         private MarkettingClerk clerk;
+        
         private bool invalid;
         
         public MainLoginForm()
@@ -35,11 +36,11 @@ namespace PoppelOrderingSystem_INF2011S_Project.Presentation_Layer
 
             if ( userController.AuthenticateUser(username, password))
             {
-                clerk = userController.GetAuthenticatedUser(username, password);
-                OrderParentForm parentForm = new OrderParentForm(clerk);
-                ClearTextBoxes();
-                parentForm.Show();
-                this.Hide();
+                MarkettingClerk clerk = userController.GetAuthenticatedUser(username, password);
+                MainOrderingForm mainOrderingForm = new MainOrderingForm();
+
+                mainOrderingForm.RecieveData(clerk);
+                this.Close();
             }
             else
             {

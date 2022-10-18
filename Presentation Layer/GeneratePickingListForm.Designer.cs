@@ -89,6 +89,7 @@
             // 
             // pickingListView
             // 
+            this.pickingListView.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.pickingListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.productCode,
             this.Quantity,
@@ -134,6 +135,7 @@
             this.ForeColor = System.Drawing.SystemColors.InfoText;
             this.Name = "GeneratePickingListForm";
             this.Padding = new System.Windows.Forms.Padding(25);
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GeneratePickingListForm";
             this.ResumeLayout(false);
             this.PerformLayout();
