@@ -78,6 +78,7 @@
             // 
             // expiryDate
             // 
+            this.expiryDate.Text = "Expiry Date ";
             this.expiryDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.expiryDate.Width = 148;
             // 
